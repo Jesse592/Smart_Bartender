@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SmartBartender</string>
+    <string name="smart_bartender">Smart Bartender</string>
+    <string name="add_new_recipe">Create new recipe</string>
 </resources>
