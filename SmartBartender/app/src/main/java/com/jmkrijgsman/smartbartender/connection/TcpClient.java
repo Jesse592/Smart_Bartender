@@ -6,11 +6,14 @@ import com.jmkrijgsman.smartbartender.BartenderCallback;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class TcpClient {
     private static final String LOGTAG = "TCP-Client";
@@ -33,38 +36,36 @@ public class TcpClient {
         this.callback = callback;
     }
 
-    public void run() {
+    public void run() throws IOException {
         isRunning = true;
 
         try {
             Log.d("TCP Client", "C: Connecting...");
 
-            InetAddress serverAddress = InetAddress.getByName(this.hostname);
+            InetSocketAddress serverAddress = new InetSocketAddress(InetAddress.getByName(this.hostname), this.port);
 
-            try (Socket socket = new Socket(serverAddress, this.port)) {
-                outBuffer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-                inBuffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            Socket socket = new Socket();
+            socket.connect(serverAddress, 5_000);
 
-                while (isRunning) {
-                    String message = inBuffer.readLine();
+            outBuffer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+            inBuffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                    callback.OnConnectionChanged(true);
+            while (isRunning) {
+                String message = inBuffer.readLine();
 
-                    if (message != null && messageListener != null)
-                        messageListener.OnMessageReceived(message);
-                }
+                callback.OnConnectionChanged(true);
 
-                Log.d(LOGTAG, "Received Message: '" + messageListener + "'");
-
-            } catch (Exception e) {
-                Log.e(LOGTAG, "Error in client", e);
+                if (message != null && messageListener != null)
+                    messageListener.OnMessageReceived(message);
             }
-        } catch (Exception e) {
+
+            socket.close();
+        } catch (UnknownHostException e) {
             Log.e(LOGTAG, "Error in client", e);
         } finally {
+            callback.OnConnectionChanged(false);
             close();
         }
-
     }
 
     public void sendMessage(final String message) {

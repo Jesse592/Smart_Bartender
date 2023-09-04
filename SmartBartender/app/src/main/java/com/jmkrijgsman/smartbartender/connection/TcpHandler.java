@@ -9,6 +9,7 @@ import com.jmkrijgsman.smartbartender.connection.commands.IncomingCommandsCache;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class TcpHandler {
@@ -32,7 +33,14 @@ public class TcpHandler {
         client = new TcpClient(hostname, port, this::onProgressUpdate, this.callback);
 
         new Thread(() -> {
-            client.run();
+            while (true)
+            {
+                try {
+                    client.run();
+                } catch (IOException e) {
+                    Log.e(LOGTAG, "Error TcpClient, retry connection" + e);
+                }
+            }
         }).start();
     }
 
