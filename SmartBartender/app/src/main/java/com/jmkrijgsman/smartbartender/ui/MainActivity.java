@@ -24,7 +24,8 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     private static final String LOGTAG = "MainActivity";
 
-    private static final String hostname = "192.168.178.213";
+    //private static final String hostname = "192.168.178.213";
+    private static final String hostname = "145.49.41.13";
     private static final int port = 65432;
 
     private final List<Recipe> recipes = new ArrayList<>();
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //new TcpHandler(null).run(hostname, port);
+        new TcpHandler(null).run(hostname, port);
 
         rv = findViewById(R.id.main_recyclerview);
         adapter = new RecipeAdapter(recipes, this);
