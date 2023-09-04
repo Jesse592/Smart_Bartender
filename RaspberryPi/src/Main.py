@@ -127,22 +127,27 @@ class Bartender():
 			for p in range(0, percent):
 				p_loc = int(p/100.0*width)
 				self.led.draw_pixel(x + p_loc, h + y)
-
+    
+	def onClientConnected(self, conn, addr):
+		print(f"Connected to client at: {addr}")
+		conn.send((json.dumps(self.pump_configuration) + "\r\n").encode())
+		while True:
+			data = conn.recv(1024)
+			if not data:
+				break
+			conn.sendall(data)
+		print(f"Closed client connection: {addr}")
+		conn.close()
+    
 	def run(self):
 		self.startInterrupts()
-  
+
 		with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			s.bind((HOST, PORT))
 			s.listen()
-			conn, addr = s.accept()
-			with conn:
-				print(f"Connected by {addr}")
-				conn.send((json.dumps(self.pump_configuration) + "\n").encode())
-				while True:
-					data = conn.recv(1024)
-					if not data:
-						break
-					conn.sendall(data)
+			while True:	
+				conn, addr = s.accept()
+				threading.Thread(target=self.onClientConnected, args=(conn, addr)).start()				
         
 		# except KeyboardInterrupt:  TODO: Enable on Pi
 			#GPIO.cleanup()       # clean up GPIO on CTRL+C exit
