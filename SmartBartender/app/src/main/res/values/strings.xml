@@ -2,4 +2,6 @@
     <string name="app_name">SmartBartender</string>
     <string name="smart_bartender">Smart Bartender</string>
     <string name="add_new_recipe">Create new recipe</string>
+    <string name="connected_text">Connected</string>
+    <string name="not_connected_text">Not connected</string>
 </resources>

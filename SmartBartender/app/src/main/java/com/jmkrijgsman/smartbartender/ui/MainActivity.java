@@ -1,6 +1,7 @@
 package com.jmkrijgsman.smartbartender.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -8,7 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.jmkrijgsman.smartbartender.BartenderCallback;
 import com.jmkrijgsman.smartbartender.R;
 import com.jmkrijgsman.smartbartender.connection.TcpHandler;
 import com.jmkrijgsman.smartbartender.datastorage.AppDatabaseManager;
@@ -21,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BartenderCallback {
     private static final String LOGTAG = "MainActivity";
 
     //private static final String hostname = "192.168.178.213";
@@ -34,12 +39,20 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rv;
     private RecipeAdapter adapter;
 
+    private ProgressBar connectedProgressBar;
+    private ImageView connectedBar;
+    private TextView connectedTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-        new TcpHandler(null).run(hostname, port);
+
+        connectedBar = findViewById(R.id.main_activity_bottom_bar);
+        connectedProgressBar = findViewById(R.id.main_activity_bottom_bar_spinner);
+        connectedTextView = findViewById(R.id.main_activity_bottom_bar_text);
+
+        new TcpHandler(this).run(hostname, port);
 
         rv = findViewById(R.id.main_recyclerview);
         adapter = new RecipeAdapter(recipes, this);
@@ -66,5 +79,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onAddAccountClicked(View view) {
+    }
+
+    @Override
+    public void OnConnectionChanged(boolean isConnected) {
+        runOnUiThread(() -> {
+            if (isConnected)
+            {
+                connectedProgressBar.setVisibility(View.INVISIBLE);
+                connectedBar.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.tcp_connection_connected, getApplicationContext().getTheme()));
+                connectedTextView.setText(R.string.connected_text);
+            } else
+            {
+                connectedProgressBar.setVisibility(View.VISIBLE);
+                connectedBar.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.tcp_connection_not_connected, getApplicationContext().getTheme()));
+                connectedTextView.setText(R.string.not_connected_text);
+            }
+        });
+    }
+
+    @Override
+    public void OnRecipeChanged(boolean isProcessing, Recipe recipe) {
+
     }
 }

@@ -29,7 +29,7 @@ public class TcpHandler {
         this.hostname = hostname;
         this.port = port;
 
-        client = new TcpClient(hostname, port, this::onProgressUpdate);
+        client = new TcpClient(hostname, port, this::onProgressUpdate, this.callback);
 
         new Thread(() -> {
             client.run();
