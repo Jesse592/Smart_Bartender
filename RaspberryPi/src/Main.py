@@ -145,9 +145,12 @@ class Bartender():
 		with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			s.bind((HOST, PORT))
 			s.listen()
-			while True:	
-				conn, addr = s.accept()
-				threading.Thread(target=self.onClientConnected, args=(conn, addr)).start()				
+			while True:
+				try:
+					conn, addr = s.accept()
+					threading.Thread(target=self.onClientConnected, args=(conn, addr)).start()
+				except:
+					print("Exception in client connection caught")
         
 		# except KeyboardInterrupt:  TODO: Enable on Pi
 			#GPIO.cleanup()       # clean up GPIO on CTRL+C exit
