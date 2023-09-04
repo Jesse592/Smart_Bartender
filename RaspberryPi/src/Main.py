@@ -137,7 +137,7 @@ class Bartender():
 			conn, addr = s.accept()
 			with conn:
 				print(f"Connected by {addr}")
-				conn.send("Connected to server\n".encode())
+				conn.send((json.dumps(self.pump_configuration) + "\n").encode())
 				while True:
 					data = conn.recv(1024)
 					if not data:
