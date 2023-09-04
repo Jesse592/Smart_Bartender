@@ -17,7 +17,7 @@ public class TcpHandler {
     private String hostname;
     private int port;
 
-    private BartenderCallback callback;
+    private final BartenderCallback callback;
     private TcpClient client;
 
     public TcpHandler(BartenderCallback callback) {
