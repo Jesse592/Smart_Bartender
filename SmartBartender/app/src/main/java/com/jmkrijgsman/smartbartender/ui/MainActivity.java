@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final List<Recipe> recipes = new ArrayList<>();
 
+    private TcpHandler tcpHandler;
     private RecyclerView rv;
     private RecipeAdapter adapter;
 

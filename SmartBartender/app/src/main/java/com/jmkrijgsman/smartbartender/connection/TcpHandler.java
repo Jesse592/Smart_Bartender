@@ -29,36 +29,28 @@ public class TcpHandler {
         this.hostname = hostname;
         this.port = port;
 
-        new TcpClientTask().execute("");
+        client = new TcpClient(hostname, port, this::onProgressUpdate);
+
+        new Thread(() -> {
+            client.run();
+        }).start();
     }
 
-    public class TcpClientTask extends AsyncTask<String, String, TcpClient> {
-        @Override
-        protected TcpClient doInBackground(String... messages) {
-            client = new TcpClient(hostname, port, this::publishProgress);
-            client.run();
-            return null;
-        }
+    private void onProgressUpdate(String value) {
+        Log.d(LOGTAG, "response " + value);
 
-        @Override
-        protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-            Log.d(LOGTAG, "response " + values[0]);
+        try
+        {
+            JSONObject response = new JSONObject(value);
 
-            try
-            {
-                JSONObject response = new JSONObject(values[0]);
+            String command = response.getString("command");
+            JSONObject data = response.getJSONObject("data");
 
-                String command = response.getString("command");
-                JSONObject data = response.getJSONObject("data");
-
-                if (IncomingCommandsCache.commandsMap.containsKey(command))
-                    Objects.requireNonNull(IncomingCommandsCache.commandsMap.get(command)).Handle(data, callback);
-
-            } catch (JSONException e)
-            {
-                Log.w(LOGTAG, "Error in parsing data to json " + e);
-            }
+            if (IncomingCommandsCache.commandsMap.containsKey(command))
+                Objects.requireNonNull(IncomingCommandsCache.commandsMap.get(command)).Handle(data, callback);
+        } catch (JSONException e)
+        {
+            Log.w(LOGTAG, "Error in parsing json data: " + e);
         }
     }
 }
