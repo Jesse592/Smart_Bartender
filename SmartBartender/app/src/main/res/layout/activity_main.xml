@@ -68,7 +68,7 @@
         android:src="@drawable/ic_baseline_add_24"
         app:layout_constraintBottom_toTopOf="@id/main_activity_bottom_bar"
         app:layout_constraintRight_toRightOf="parent"
-        android:onClick="onAddAccountClicked"
+        android:onClick="onAddRecipeClicked"
         android:contentDescription="@string/add_new_recipe"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

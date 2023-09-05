@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.jmkrijgsman.smartbartender.R;
+import com.jmkrijgsman.smartbartender.Recipefragment;
 import com.jmkrijgsman.smartbartender.connection.TcpHandler;
 import com.jmkrijgsman.smartbartender.datastorage.AppDatabaseManager;
 import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
@@ -74,7 +75,8 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
         }).start();
     }
 
-    public void onAddAccountClicked(View view) {
+    public void onAddRecipeClicked(View view) {
+        new Recipefragment().show(getSupportFragmentManager(), LOGTAG);
     }
 
     @Override
