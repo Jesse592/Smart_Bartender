@@ -8,7 +8,7 @@ public class IncomingCommandsCache {
 
     private static Map<String, IncomingCommand> createMap() {
         HashMap<String, IncomingCommand> map = new HashMap<>();
-        commandsMap.put(SetConnectedDrinksCommand.command, new SetConnectedDrinksCommand());
+        map.put(SetConnectedDrinksCommand.command, new SetConnectedDrinksCommand());
 
         return map;
     }
