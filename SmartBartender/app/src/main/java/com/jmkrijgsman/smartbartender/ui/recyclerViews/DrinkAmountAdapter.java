@@ -60,7 +60,7 @@ public class DrinkAmountAdapter extends RecyclerView.Adapter<DrinkAmountAdapter.
         int currentMilliliters =  drinkAmounts.get(position).getAmountInMilliliters();
 
         if (totalMilliliters != 0)
-            drinkAmountViewHolder.drinkPercentageTextView.setText(String.format(Locale.getDefault(),"%d%%", (int)(((double)currentMilliliters / (double)totalMilliliters) * 100)));
+            drinkAmountViewHolder.drinkPercentageTextView.setText(String.format(Locale.getDefault(),"%d%%", Math.round(((double)currentMilliliters / (double)totalMilliliters) * 100)));
     }
 
     @Override
