@@ -140,7 +140,8 @@ class Bartender():
     
 	def onClientConnected(self, conn, addr):
 		print(f"Connected to client at: {addr}")
-		conn.send((json.dumps(self.pump_configuration) + "\r\n").encode())
+  
+		conn.send((json.dumps({'command': 'ConnectedDrinks', 'data': self.pump_configuration}) + "\r\n").encode())
 		while self.isRunning:
 			data = conn.recv(1024)
 			if not data:
