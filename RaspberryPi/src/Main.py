@@ -4,8 +4,8 @@ import threading
 import traceback
 import socket
 
-#HOST = "192.168.178.213"  # Make IP static or update field dynamicly
-HOST = "145.49.41.13"
+HOST = "192.168.4.1"  # Make IP static or update field dynamicly
+#HOST = "145.49.16.132"
 PORT = 65432
 
 FLOW_RATE = 60.0/100.0
@@ -149,13 +149,13 @@ class Bartender():
 				try:
 					conn, addr = s.accept()
 					threading.Thread(target=self.onClientConnected, args=(conn, addr)).start()
+				except KeyboardInterrupt:
+					break # Send close to all clients + shutdown
 				except:
 					print("Exception in client connection caught")
-        
-		# except KeyboardInterrupt:  TODO: Enable on Pi
-			#GPIO.cleanup()       # clean up GPIO on CTRL+C exit
-		#GPIO.cleanup()           # clean up GPIO on normal exit 
-
+			s.shutdown(socket.SHUT_RDWR)
+			s.close()
+		#GPIO.cleanup()           # clean up GPIO on normal exit
 		traceback.print_exc()
 
 
