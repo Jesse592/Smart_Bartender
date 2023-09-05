@@ -7,6 +7,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,10 +31,13 @@ public class Recipe {
     }
 
     @Ignore
-    public Recipe() { }
+    public Recipe() {
+        this.drinkAmounts = new ArrayList<>();
+    }
 
     public Recipe(String name) {
         this.name = name;
+        this.drinkAmounts = new ArrayList<>();
     }
 
     public String getName() {

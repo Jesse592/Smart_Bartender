@@ -13,7 +13,8 @@
         app:layout_constraintBottom_toBottomOf="@id/drink_amount_select_item_percentage"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:id="@+id/drink_amount_select_item_name"/>
+        android:id="@+id/drink_amount_select_item_name"
+        android:text="Cola"/>
 
     <com.google.android.material.slider.Slider
         android:layout_width="0dp"
@@ -36,7 +37,8 @@
         app:layout_constraintTop_toBottomOf="@id/drink_amount_select_item_amount"
         app:layout_constraintRight_toRightOf="@id/drink_amount_select_item_amount"
         android:textSize="18sp"
-        android:id="@+id/drink_amount_select_item_percentage"/>
+        android:id="@+id/drink_amount_select_item_percentage"
+        android:text="20%"/>
 
     <TextView
         android:layout_width="0dp"
@@ -45,6 +47,7 @@
         app:layout_constraintRight_toRightOf="parent"
 
         android:textSize="18sp"
-        android:id="@+id/drink_amount_select_item_amount"/>
+        android:id="@+id/drink_amount_select_item_amount"
+        android:text="15ml"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

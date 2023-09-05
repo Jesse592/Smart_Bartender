@@ -16,7 +16,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jmkrijgsman.smartbartender.R;
+import com.jmkrijgsman.smartbartender.connection.PumpConfiguration;
+import com.jmkrijgsman.smartbartender.connection.PumpConfigurationCache;
+import com.jmkrijgsman.smartbartender.datastorage.room.DrinkAmount;
 import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
+import com.jmkrijgsman.smartbartender.ui.recyclerViews.DrinkAmountAdapter;
+import com.jmkrijgsman.smartbartender.ui.recyclerViews.RecipeAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class RecipeFragment extends DialogFragment {
     private final Recipe recipe;
@@ -34,6 +43,14 @@ public class RecipeFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
     }
 
+    private List<DrinkAmount> getDrinkAmounts() {
+        List<DrinkAmount> list = new ArrayList<>(recipe.getDrinkAmounts());
+
+        PumpConfigurationCache.getInstance().getPumpConfigurations().forEach((p) -> list.add(new DrinkAmount(this.recipe, p)));
+
+        return list;
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -43,6 +60,15 @@ public class RecipeFragment extends DialogFragment {
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
             dialog.getWindow().setLayout(width, height);
         }
+
+        List<DrinkAmount> drinkAmounts = getDrinkAmounts();
+
+        RecyclerView rv = requireView().findViewById(R.id.recipe_fragment_drink_amount_recyclerview);
+        DrinkAmountAdapter adapter = new DrinkAmountAdapter(drinkAmounts);
+
+        rv.setAdapter(adapter);
+        rv.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
+        rv.addItemDecoration(new DividerItemDecoration(rv.getContext(), DividerItemDecoration.VERTICAL));
     }
 
     @Override

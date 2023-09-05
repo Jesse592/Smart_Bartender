@@ -138,7 +138,7 @@ class Bartender():
 				p_loc = int(p/100.0*width)
 				self.led.draw_pixel(x + p_loc, h + y)
     
-	def onClientConnected(self, conn, addr):
+	def onClientConnected(self, conn: socket, addr):
 		print(f"Connected to client at: {addr}")
   
 		conn.send((json.dumps({'command': 'ConnectedDrinks', 'data': self.pump_configuration}) + "\r\n").encode())

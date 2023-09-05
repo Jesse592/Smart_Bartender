@@ -16,7 +16,7 @@ import com.jmkrijgsman.smartbartender.R;
 import com.jmkrijgsman.smartbartender.connection.TcpHandler;
 import com.jmkrijgsman.smartbartender.datastorage.AppDatabaseManager;
 import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
-import com.jmkrijgsman.smartbartender.ui.recyclerView.RecipeAdapter;
+import com.jmkrijgsman.smartbartender.ui.recyclerViews.RecipeAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
