@@ -3,22 +3,32 @@ import json
 import threading
 import traceback
 import socket
+import RPi.GPIO as GPIO
 
-HOST = "192.168.4.1"  # Make IP static or update field dynamicly
-#HOST = "145.49.16.132"
+#HOST = "192.168.4.1"  # Make IP static or update field dynamicly
+HOST = "145.49.16.132"
 PORT = 65432
+
+LEFT_BTN_PIN = 13
+LEFT_PIN_BOUNCE = 1000
+
+RIGHT_BTN_PIN = 5
+RIGHT_PIN_BOUNCE = 2000
 
 FLOW_RATE = 60.0/100.0
 
 class Bartender(): 
 	def __init__(self):
 		self.running = False
-
+  
+		self.btn1Pin = LEFT_BTN_PIN
+		self.btn2Pin = RIGHT_BTN_PIN
+  
 		# load the pump configuration from file
 		self.pump_configuration = Bartender.readPumpConfiguration()
   
-		# for pump in self.pump_configuration.keys(): TODO: Enable on Pi
-			# GPIO.setup(self.pump_configuration[pump]["pin"], GPIO.OUT, initial=GPIO.HIGH)
+		for pump in self.pump_configuration.keys():
+			GPIO.setup(self.pump_configuration[pump]["pin"], GPIO.OUT, initial=GPIO.HIGH)
 
 		print("Done initializing")
 
@@ -33,13 +43,13 @@ class Bartender():
 
 	def startInterrupts(self):
 		print("Button interupt started")
-		#GPIO.add_event_detect(self.btn1Pin, GPIO.FALLING, callback=self.left_btn, bouncetime=LEFT_PIN_BOUNCE)  TODO: Enable on Pi
-		#GPIO.add_event_detect(self.btn2Pin, GPIO.FALLING, callback=self.right_btn, bouncetime=RIGHT_PIN_BOUNCE)  
+		GPIO.add_event_detect(self.btn1Pin, GPIO.FALLING, callback=self.left_btn, bouncetime=LEFT_PIN_BOUNCE)
+		GPIO.add_event_detect(self.btn2Pin, GPIO.FALLING, callback=self.right_btn, bouncetime=RIGHT_PIN_BOUNCE)  
 
 	def stopInterrupts(self):
 		print("Button interupt stoped")
-		#GPIO.remove_event_detect(self.btn1Pin) TODO: Enable on Pi
-		#GPIO.remove_event_detect(self.btn2Pin)
+		GPIO.remove_event_detect(self.btn1Pin)
+		GPIO.remove_event_detect(self.btn2Pin)
 
 	def clean(self):
 		waitTime = 20
@@ -67,9 +77,9 @@ class Bartender():
 
 
 	def pour(self, pin, waitTime):
-		#GPIO.output(pin, GPIO.LOW) TODO: Enable on Pi
+		GPIO.output(pin, GPIO.LOW)
 		time.sleep(waitTime)
-		#GPIO.output(pin, GPIO.HIGH)
+		GPIO.output(pin, GPIO.HIGH)
 
 	def progressBar(self, waitTime):
 		interval = waitTime / 100.0
@@ -109,11 +119,11 @@ class Bartender():
 
 	def left_btn(self, ctx):
 		if not self.running:
-			self.menuContext.advance()
+			return # Here button action
 
 	def right_btn(self, ctx):
 		if not self.running:
-			self.menuContext.select()
+			return # Here button action
 
 	def updateProgressBar(self, percent, x=15, y=15):
 		height = 10
@@ -161,7 +171,7 @@ class Bartender():
 			s.shutdown(socket.SHUT_RDWR)
 			s.close()
    
-		#GPIO.cleanup()           # clean up GPIO on normal exit
+		GPIO.cleanup()           # clean up GPIO on normal exit
 		traceback.print_exc()
 
 
