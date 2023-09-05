@@ -21,9 +21,11 @@ import java.util.stream.Collectors;
 
 public class DrinkAmountAdapter extends RecyclerView.Adapter<DrinkAmountAdapter.DrinkAmountViewHolder> {
     private final List<DrinkAmount> drinkAmounts;
+    private DrinkAmountCallback callback;
 
-    public DrinkAmountAdapter(List<DrinkAmount> drinkAmounts) {
+    public DrinkAmountAdapter(List<DrinkAmount> drinkAmounts, DrinkAmountCallback callback) {
         this.drinkAmounts = drinkAmounts;
+        this.callback = callback;
     }
 
     @NonNull
@@ -35,10 +37,30 @@ public class DrinkAmountAdapter extends RecyclerView.Adapter<DrinkAmountAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull DrinkAmountViewHolder holder, int position) {
-
         holder.drinkAmount = drinkAmounts.get(position);
-        holder.totalMilliliters = drinkAmounts.stream().mapToInt(DrinkAmount::getAmountInMilliliters).sum();
-        holder.onRecipeUpdated();
+
+        holder.drinkAmountTextView.setText(String.format(Locale.getDefault(), "%dml", holder.drinkAmount.getAmountInMilliliters()));
+        holder.drinkNameTextView.setText(holder.drinkAmount.getDrinkName());
+        holder.amountSlider.setValue(holder.drinkAmount.getAmountInMilliliters());
+
+        holder.amountSlider.addOnChangeListener((slider, v, b) -> {
+            holder.amountSlider.setValue(holder.drinkAmount.getAmountInMilliliters());
+            holder.drinkAmountTextView.setText(String.format(Locale.getDefault(), "%dml", holder.drinkAmount.getAmountInMilliliters()));
+            holder.drinkAmount.setAmountInMilliliters((int)v);
+
+            callback.onDrinkAmountSliderChanged(holder.drinkAmount);
+        });
+    }
+
+    public void updateHolderPercentage(RecyclerView.ViewHolder holder, int position)
+    {
+        DrinkAmountViewHolder drinkAmountViewHolder = (DrinkAmountViewHolder)holder;
+
+        int totalMilliliters = drinkAmounts.stream().mapToInt(DrinkAmount::getAmountInMilliliters).sum();
+        int currentMilliliters =  drinkAmounts.get(position).getAmountInMilliliters();
+
+        if (totalMilliliters != 0)
+            drinkAmountViewHolder.drinkPercentageTextView.setText(String.format(Locale.getDefault(),"%d%%", (int)(((double)currentMilliliters / (double)totalMilliliters) * 100)));
     }
 
     @Override
@@ -48,7 +70,6 @@ public class DrinkAmountAdapter extends RecyclerView.Adapter<DrinkAmountAdapter.
 
     static class DrinkAmountViewHolder extends RecyclerView.ViewHolder {
         DrinkAmount drinkAmount;
-        int totalMilliliters;
 
         TextView drinkNameTextView;
         TextView drinkAmountTextView;
@@ -61,16 +82,6 @@ public class DrinkAmountAdapter extends RecyclerView.Adapter<DrinkAmountAdapter.
             drinkAmountTextView = itemView.findViewById(R.id.drink_amount_select_item_amount);
             drinkPercentageTextView = itemView.findViewById(R.id.drink_amount_select_item_percentage);
             amountSlider = itemView.findViewById(R.id.drink_amount_select_item_slider);
-        }
-
-        public void onRecipeUpdated()
-        {
-            int currentMilliliters = drinkAmount.getAmountInMilliliters();
-
-            drinkNameTextView.setText(drinkAmount.getDrinkName());
-            drinkAmountTextView.setText(String.format(Locale.getDefault(), "%dml", drinkAmount.getAmountInMilliliters()));
-            drinkPercentageTextView.setText(String.format(Locale.getDefault(),"%d%%", (int)(((double)totalMilliliters / (double)currentMilliliters) * 100)));
-            amountSlider.setValue(drinkAmount.getAmountInMilliliters());
         }
     }
 

@@ -21,14 +21,18 @@ import com.jmkrijgsman.smartbartender.connection.PumpConfigurationCache;
 import com.jmkrijgsman.smartbartender.datastorage.room.DrinkAmount;
 import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
 import com.jmkrijgsman.smartbartender.ui.recyclerViews.DrinkAmountAdapter;
+import com.jmkrijgsman.smartbartender.ui.recyclerViews.DrinkAmountCallback;
 import com.jmkrijgsman.smartbartender.ui.recyclerViews.RecipeAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class RecipeFragment extends DialogFragment {
+public class RecipeFragment extends DialogFragment implements DrinkAmountCallback {
     private final Recipe recipe;
+
+    private RecyclerView rv;
+    private DrinkAmountAdapter adapter;
 
     public RecipeFragment() {
         this.recipe = new Recipe();
@@ -66,8 +70,8 @@ public class RecipeFragment extends DialogFragment {
 
         List<DrinkAmount> drinkAmounts = getDrinkAmounts();
 
-        RecyclerView rv = requireView().findViewById(R.id.recipe_fragment_drink_amount_recyclerview);
-        DrinkAmountAdapter adapter = new DrinkAmountAdapter(drinkAmounts);
+        rv = requireView().findViewById(R.id.recipe_fragment_drink_amount_recyclerview);
+        adapter = new DrinkAmountAdapter(drinkAmounts, this);
 
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
@@ -79,5 +83,13 @@ public class RecipeFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_recipefragment, container, false);
+    }
+
+    @Override
+    public void onDrinkAmountSliderChanged(DrinkAmount drinkAmount) {
+        for(int i = 0; i < adapter.getItemCount(); i++)
+        {
+            adapter.updateHolderPercentage(rv.findViewHolderForAdapterPosition(i), i);
+        }
     }
 }
