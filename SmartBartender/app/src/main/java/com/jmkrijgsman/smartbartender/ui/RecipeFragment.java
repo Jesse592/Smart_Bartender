@@ -46,7 +46,10 @@ public class RecipeFragment extends DialogFragment {
     private List<DrinkAmount> getDrinkAmounts() {
         List<DrinkAmount> list = new ArrayList<>(recipe.getDrinkAmounts());
 
-        PumpConfigurationCache.getInstance().getPumpConfigurations().forEach((p) -> list.add(new DrinkAmount(this.recipe, p)));
+        PumpConfigurationCache.getInstance().getPumpConfigurations().forEach((p) -> {
+            if (!p.getDrink().equals("null"))
+                list.add(new DrinkAmount(this.recipe, p));
+        });
 
         return list;
     }
