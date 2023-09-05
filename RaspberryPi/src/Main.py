@@ -131,7 +131,7 @@ class Bartender():
 	def onClientConnected(self, conn, addr):
 		print(f"Connected to client at: {addr}")
 		conn.send((json.dumps(self.pump_configuration) + "\r\n").encode())
-		while True:
+		while self.isRunning:
 			data = conn.recv(1024)
 			if not data:
 				break
@@ -141,20 +141,26 @@ class Bartender():
     
 	def run(self):
 		self.startInterrupts()
-
+  
 		with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			s.bind((HOST, PORT))
 			s.listen()
-			while True:
+
+			self.isRunning = True
+			while self.isRunning:
 				try:
 					conn, addr = s.accept()
-					threading.Thread(target=self.onClientConnected, args=(conn, addr)).start()
+					client = threading.Thread(target=self.onClientConnected, args=(conn, addr))
+					client.start()
 				except KeyboardInterrupt:
-					break # Send close to all clients + shutdown
+					self.isRunning = False
+					print("Shutting down...") # Consider sending close to all clients
 				except:
 					print("Exception in client connection caught")
+     
 			s.shutdown(socket.SHUT_RDWR)
 			s.close()
+   
 		#GPIO.cleanup()           # clean up GPIO on normal exit
 		traceback.print_exc()
 
