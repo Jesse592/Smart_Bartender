@@ -16,7 +16,7 @@ public class Recipe {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "Name")
-    private final String name;
+    private String name;
 
     @Ignore
     private List<DrinkAmount> drinkAmounts;
@@ -28,6 +28,9 @@ public class Recipe {
     public void setDrinkAmounts(List<DrinkAmount> drinkAmounts) {
         this.drinkAmounts = drinkAmounts;
     }
+
+    @Ignore
+    public Recipe() { }
 
     public Recipe(String name) {
         this.name = name;

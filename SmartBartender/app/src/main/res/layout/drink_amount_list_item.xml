@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/drink_amount_select_item_percentage"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:id="@+id/drink_amount_select_item_name"/>
+
+    <com.google.android.material.slider.Slider
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:layout_constraintLeft_toRightOf="@id/drink_amount_select_item_name"
+        app:layout_constraintRight_toLeftOf="@id/drink_amount_select_item_amount"
+        app:layout_constraintTop_toTopOf="@id/drink_amount_select_item_name"
+        app:layout_constraintBottom_toBottomOf="@id/drink_amount_select_item_name"
+        android:valueFrom="0"
+        android:stepSize="5"
+        android:valueTo="100"
+        android:value="0"
+        android:id="@+id/drink_amount_select_item_slider"
+        />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/drink_amount_select_item_amount"
+        app:layout_constraintRight_toRightOf="@id/drink_amount_select_item_amount"
+        android:textSize="18sp"
+        android:id="@+id/drink_amount_select_item_percentage"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+
+        android:textSize="18sp"
+        android:id="@+id/drink_amount_select_item_amount"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

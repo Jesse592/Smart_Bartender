@@ -1,4 +1,4 @@
-package com.jmkrijgsman.smartbartender;
+package com.jmkrijgsman.smartbartender.ui;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -15,10 +15,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class Recipefragment extends DialogFragment {
+import com.jmkrijgsman.smartbartender.R;
+import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
 
-    public Recipefragment() {
-        // Required empty public constructor
+public class RecipeFragment extends DialogFragment {
+    private final Recipe recipe;
+
+    public RecipeFragment() {
+        this.recipe = new Recipe();
+    }
+
+    public RecipeFragment(Recipe recipe) {
+        this.recipe = recipe;
     }
 
     @Override
