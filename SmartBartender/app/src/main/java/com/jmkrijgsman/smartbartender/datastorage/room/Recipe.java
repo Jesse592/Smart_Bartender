@@ -44,6 +44,10 @@ public class Recipe {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getTotalAmount()
     {
         return drinkAmounts.stream().mapToInt(DrinkAmount::getAmountInMilliliters).sum();

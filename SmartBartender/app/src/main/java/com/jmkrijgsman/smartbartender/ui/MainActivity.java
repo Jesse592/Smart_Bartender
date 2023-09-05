@@ -62,20 +62,11 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
     protected void onResume() {
         super.onResume();
 
-        new Thread(() -> {
-            AppDatabaseManager manager = AppDatabaseManager.getInstance(getApplicationContext());
-            this.recipes.clear();
-
-            List<Recipe> tempList = manager.getRecipes();
-
-            this.recipes.addAll(tempList);
-
-            runOnUiThread(() -> Objects.requireNonNull(rv.getAdapter()).notifyItemRangeChanged(0,tempList.size()));
-        }).start();
+        OnRecipesChanged();
     }
 
     public void onAddRecipeClicked(View view) {
-        new RecipeFragment().show(getSupportFragmentManager(), LOGTAG);
+        new RecipeFragment(this).show(getSupportFragmentManager(), LOGTAG);
     }
 
     @Override
@@ -98,5 +89,19 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
     @Override
     public void OnRecipeChanged(boolean isProcessing, Recipe recipe) {
 
+    }
+
+    @Override
+    public void OnRecipesChanged() {
+        new Thread(() -> {
+            AppDatabaseManager manager = AppDatabaseManager.getInstance(getApplicationContext());
+            this.recipes.clear();
+
+            List<Recipe> tempList = manager.getRecipes();
+
+            this.recipes.addAll(tempList);
+
+            runOnUiThread(() -> Objects.requireNonNull(rv.getAdapter()).notifyItemRangeChanged(0,tempList.size()));
+        }).start();
     }
 }

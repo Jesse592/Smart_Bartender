@@ -14,10 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.jmkrijgsman.smartbartender.R;
 import com.jmkrijgsman.smartbartender.connection.PumpConfiguration;
 import com.jmkrijgsman.smartbartender.connection.PumpConfigurationCache;
+import com.jmkrijgsman.smartbartender.datastorage.AppDatabaseManager;
+import com.jmkrijgsman.smartbartender.datastorage.room.AppDatabase;
 import com.jmkrijgsman.smartbartender.datastorage.room.DrinkAmount;
 import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
 import com.jmkrijgsman.smartbartender.ui.recyclerViews.DrinkAmountAdapter;
@@ -31,14 +35,27 @@ import java.util.Objects;
 public class RecipeFragment extends DialogFragment implements DrinkAmountCallback {
     private final Recipe recipe;
 
+    private BartenderCallback callback;
+    private List<DrinkAmount> drinkAmounts;
+
     private RecyclerView rv;
     private DrinkAmountAdapter adapter;
+
+    private EditText recipeNameText;
+    private Button saveButton;
 
     public RecipeFragment() {
         this.recipe = new Recipe();
     }
 
-    public RecipeFragment(Recipe recipe) {
+    public RecipeFragment(BartenderCallback callback)
+    {
+        this.callback = callback;
+        this.recipe = new Recipe();
+    }
+
+    public RecipeFragment(BartenderCallback callback, Recipe recipe) {
+        this.callback = callback;
         this.recipe = recipe;
     }
 
@@ -47,7 +64,7 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
         super.onCreate(savedInstanceState);
     }
 
-    private List<DrinkAmount> getDrinkAmounts() {
+    private List<DrinkAmount> setDrinkAmounts() {
         List<DrinkAmount> list = new ArrayList<>(recipe.getDrinkAmounts());
 
         PumpConfigurationCache.getInstance().getPumpConfigurations().forEach((p) -> {
@@ -55,6 +72,7 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
                 list.add(new DrinkAmount(this.recipe, p));
         });
 
+        this.drinkAmounts = list;
         return list;
     }
 
@@ -68,7 +86,29 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
             dialog.getWindow().setLayout(width, height);
         }
 
-        List<DrinkAmount> drinkAmounts = getDrinkAmounts();
+        List<DrinkAmount> drinkAmounts = setDrinkAmounts();
+
+        recipeNameText = requireView().findViewById(R.id.recipe_fragment_name_edit);
+        saveButton = requireView().findViewById(R.id.recipe_fragment_save_button);
+        saveButton.setOnClickListener(v -> {
+            recipe.setName(recipeNameText.getText().toString());
+
+            List<DrinkAmount> nonEmptyDrinkAmounts = new ArrayList<>();
+
+            this.drinkAmounts.forEach(d -> {
+                if (d.getAmountInMilliliters() == 0) return;
+
+                d.setRecipeName(recipe.getName());
+                nonEmptyDrinkAmounts.add(d);
+            });
+
+            recipe.setDrinkAmounts(nonEmptyDrinkAmounts);
+
+            AppDatabaseManager.getInstance(getContext()).insertRecipe(recipe);
+
+            this.callback.OnRecipesChanged();
+            dismiss();
+        });
 
         rv = requireView().findViewById(R.id.recipe_fragment_drink_amount_recyclerview);
         adapter = new DrinkAmountAdapter(drinkAmounts, this);
