@@ -2,7 +2,7 @@ package com.jmkrijgsman.smartbartender.connection;
 
 import android.util.Log;
 
-import com.jmkrijgsman.smartbartender.BartenderCallback;
+import com.jmkrijgsman.smartbartender.ui.BartenderCallback;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

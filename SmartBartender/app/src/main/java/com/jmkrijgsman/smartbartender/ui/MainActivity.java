@@ -7,30 +7,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.jmkrijgsman.smartbartender.BartenderCallback;
 import com.jmkrijgsman.smartbartender.R;
 import com.jmkrijgsman.smartbartender.connection.TcpHandler;
 import com.jmkrijgsman.smartbartender.datastorage.AppDatabaseManager;
-import com.jmkrijgsman.smartbartender.datastorage.room.DrinkAmount;
 import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
 import com.jmkrijgsman.smartbartender.ui.recyclerView.RecipeAdapter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements BartenderCallback {
     private static final String LOGTAG = "MainActivity";
 
-    private static final String hostname = "192.168.4.1";
-    //private static final String hostname = "145.49.16.132";
+    //private static final String hostname = "192.168.4.1";
+    private static final String hostname = "145.49.16.132";
     private static final int port = 65432;
 
     private final List<Recipe> recipes = new ArrayList<>();

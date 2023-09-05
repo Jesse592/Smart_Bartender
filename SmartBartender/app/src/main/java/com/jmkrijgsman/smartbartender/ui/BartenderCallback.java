@@ -1,4 +1,4 @@
-package com.jmkrijgsman.smartbartender;
+package com.jmkrijgsman.smartbartender.ui;
 
 import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
 

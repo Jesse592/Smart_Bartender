@@ -1,9 +1,8 @@
 package com.jmkrijgsman.smartbartender.connection;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
-import com.jmkrijgsman.smartbartender.BartenderCallback;
+import com.jmkrijgsman.smartbartender.ui.BartenderCallback;
 import com.jmkrijgsman.smartbartender.connection.commands.IncomingCommandsCache;
 
 import org.json.JSONException;
