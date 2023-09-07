@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
     }
 
     @Override
-    public void OnRecipeChanged(boolean isProcessing, Recipe recipe) {
+    public void OnRecipeChanged(boolean isProcessing, int progress, Recipe recipe) {
 
     }
 

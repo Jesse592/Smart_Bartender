@@ -4,5 +4,5 @@ import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
 
 public interface ConnectionCallback {
     void OnConnectionChanged(boolean isConnected);
-    void OnRecipeChanged(boolean isProcessing , Recipe recipe);
+    void OnRecipeChanged(boolean isProcessing, int progress, Recipe recipe);
 }

@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
-import com.jmkrijgsman.smartbartender.ui.BartenderCallback;
 import com.jmkrijgsman.smartbartender.connection.commands.IncomingCommandsCache;
 import com.jmkrijgsman.smartbartender.ui.ConnectionCallback;
 

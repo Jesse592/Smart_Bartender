@@ -7,6 +7,8 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverter;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,12 @@ public class Recipe {
 
     public Recipe(String name) {
         this.name = name;
+        this.drinkAmounts = new ArrayList<>();
+    }
+
+    public Recipe(JSONObject json) {
+        this.id = json.optInt("id");
+        this.name = json.optString("name");
         this.drinkAmounts = new ArrayList<>();
     }
 

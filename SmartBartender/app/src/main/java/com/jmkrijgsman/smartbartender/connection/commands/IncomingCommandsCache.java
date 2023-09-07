@@ -9,6 +9,7 @@ public class IncomingCommandsCache {
     private static Map<String, IncomingCommand> createMap() {
         HashMap<String, IncomingCommand> map = new HashMap<>();
         map.put(SetConnectedDrinksCommand.command, new SetConnectedDrinksCommand());
+        map.put(RecipeProgressCommand.command, new RecipeProgressCommand());
 
         return map;
     }
