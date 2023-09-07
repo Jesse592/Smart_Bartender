@@ -1,6 +1,7 @@
 package com.jmkrijgsman.smartbartender.datastorage.room;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -17,6 +18,9 @@ public interface RecipeDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertRecipe(Recipe recipe);
+
+    @Query("DELETE FROM DrinkAmount WHERE RecipeId =:recipeId")
+    void removeDrinkAmounts(int recipeId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertDrinkAmount(DrinkAmount drink);

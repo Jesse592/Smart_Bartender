@@ -50,9 +50,10 @@ public class AppDatabaseManager implements DataStorage{
     public void insertRecipe(Recipe recipe) {
         new Thread(() ->
         {
-            long id = database.recipeDAO().insertRecipe(recipe);
+            int id = (int)database.recipeDAO().insertRecipe(recipe);
+            database.recipeDAO().removeDrinkAmounts(id);
             recipe.getDrinkAmounts().forEach(r -> {
-                r.setRecipeId((int)id);
+                r.setRecipeId(id);
                 database.recipeDAO().insertDrinkAmount(r);
             });
         }).start();
