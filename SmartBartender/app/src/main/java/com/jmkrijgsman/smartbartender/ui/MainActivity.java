@@ -1,6 +1,7 @@
 package com.jmkrijgsman.smartbartender.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,8 +36,10 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
     private RecyclerView rv;
 
     private ProgressBar connectedProgressBar;
+    private ProgressBar mixProgressBar;
     private ImageView connectedBar;
     private TextView connectedTextView;
+    private TextView mixTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,9 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
 
         connectedBar = findViewById(R.id.main_activity_bottom_bar);
         connectedProgressBar = findViewById(R.id.main_activity_bottom_bar_spinner);
+        mixProgressBar = findViewById(R.id.main_activity_bottom_bar_progress);
         connectedTextView = findViewById(R.id.main_activity_bottom_bar_text);
+        mixTextView = findViewById(R.id.main_activity_bottom_bar_mix_text);
 
         this.tcpHandler = new TcpHandler(this);
         tcpHandler.run(hostname, port);
@@ -72,6 +77,10 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
     @Override
     public void OnConnectionChanged(boolean isConnected) {
         runOnUiThread(() -> {
+            mixProgressBar.setVisibility(View.INVISIBLE);
+            mixTextView.setVisibility(View.INVISIBLE);
+            connectedTextView.setVisibility(View.VISIBLE);
+
             if (isConnected)
             {
                 connectedProgressBar.setVisibility(View.INVISIBLE);
@@ -88,7 +97,23 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
 
     @Override
     public void OnRecipeChanged(boolean isProcessing, int progress, Recipe recipe) {
+        if (isProcessing)
+        {
+            runOnUiThread(() -> {
 
+                if (connectedTextView.getVisibility() == View.VISIBLE)
+                {
+                    connectedTextView.setVisibility(View.INVISIBLE);
+                    connectedProgressBar.setVisibility(View.INVISIBLE);
+                    mixTextView.setVisibility(View.VISIBLE);
+                    mixProgressBar.setVisibility(View.VISIBLE);
+                }
+
+                mixTextView.setText(String.format("Mixing %s", recipe.getName()));
+                mixProgressBar.setProgress(progress);
+            });
+        } else
+            OnConnectionChanged(true);
     }
 
     @Override

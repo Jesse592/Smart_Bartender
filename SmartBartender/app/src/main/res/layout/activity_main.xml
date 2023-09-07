@@ -40,23 +40,52 @@
         android:id="@+id/main_activity_bottom_bar_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="not connected"
+        android:text="@string/not_connected"
         android:textColor="@color/white"
         android:textStyle="bold"
+        android:layout_marginStart="16dp"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintBottom_toBottomOf="@id/main_activity_bottom_bar"
         app:layout_constraintLeft_toLeftOf="@id/main_activity_bottom_bar"
         app:layout_constraintTop_toTopOf="@id/main_activity_bottom_bar"
-        app:layout_constraintRight_toRightOf="@id/main_activity_bottom_bar"/>
+        app:layout_constraintRight_toRightOf="@id/main_activity_bottom_bar" />
 
     <ProgressBar
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:layout_marginStart="4dp"
         android:indeterminateTint="@color/white"
         app:layout_constraintTop_toTopOf="@id/main_activity_bottom_bar_text"
         app:layout_constraintBottom_toBottomOf="@id/main_activity_bottom_bar_text"
         app:layout_constraintLeft_toRightOf="@id/main_activity_bottom_bar_text"
         android:id="@+id/main_activity_bottom_bar_spinner"/>
+
+    <TextView
+        android:id="@+id/main_activity_bottom_bar_mix_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_marginStart="16dp"
+        android:visibility="gone"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintBottom_toBottomOf="@id/main_activity_bottom_bar"
+        app:layout_constraintLeft_toLeftOf="@id/main_activity_bottom_bar"
+        app:layout_constraintTop_toTopOf="@id/main_activity_bottom_bar"
+        app:layout_constraintRight_toLeftOf="@id/main_activity_bottom_bar_progress" />
+
+    <ProgressBar
+        android:layout_width="0dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:indeterminateTint="@color/white"
+        android:visibility="gone"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        app:layout_constraintTop_toTopOf="@id/main_activity_bottom_bar_mix_text"
+        app:layout_constraintBottom_toBottomOf="@id/main_activity_bottom_bar_mix_text"
+        app:layout_constraintLeft_toRightOf="@id/main_activity_bottom_bar_mix_text"
+        app:layout_constraintRight_toRightOf="@id/main_activity_bottom_bar"
+        android:id="@+id/main_activity_bottom_bar_progress"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/map_view_stop_FAB"
