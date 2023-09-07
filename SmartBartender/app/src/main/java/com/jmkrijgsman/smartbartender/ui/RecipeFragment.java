@@ -20,6 +20,7 @@ import android.widget.EditText;
 import com.jmkrijgsman.smartbartender.R;
 import com.jmkrijgsman.smartbartender.connection.PumpConfiguration;
 import com.jmkrijgsman.smartbartender.connection.PumpConfigurationCache;
+import com.jmkrijgsman.smartbartender.connection.TcpHandler;
 import com.jmkrijgsman.smartbartender.datastorage.AppDatabaseManager;
 import com.jmkrijgsman.smartbartender.datastorage.room.AppDatabase;
 import com.jmkrijgsman.smartbartender.datastorage.room.DrinkAmount;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class RecipeFragment extends DialogFragment implements DrinkAmountCallback {
+    private TcpHandler handler;
     private final Recipe recipe;
 
     private BartenderCallback callback;
@@ -47,14 +49,15 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
         this.recipe = new Recipe();
     }
 
-    public RecipeFragment(BartenderCallback callback)
+    public RecipeFragment(BartenderCallback callback, TcpHandler handler)
     {
         this.callback = callback;
         this.recipe = new Recipe();
     }
 
-    public RecipeFragment(BartenderCallback callback, Recipe recipe) {
+    public RecipeFragment(BartenderCallback callback, TcpHandler handler, Recipe recipe) {
         this.callback = callback;
+        this.handler = handler;
         this.recipe = recipe;
     }
 
@@ -115,12 +118,19 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
             this.callback.OnRecipesChanged();
         });
 
+        Button produceButton = requireView().findViewById(R.id.recipe_fragment_produce_button);
+        produceButton.setOnClickListener(this::onProduceClicked);
+
         rv = requireView().findViewById(R.id.recipe_fragment_drink_amount_recyclerview);
         adapter = new DrinkAmountAdapter(drinkAmounts, this);
 
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
         rv.addItemDecoration(new DividerItemDecoration(rv.getContext(), DividerItemDecoration.VERTICAL));
+    }
+
+    private void onProduceClicked(View view) {
+        handler.startRecipe(recipe);
     }
 
     @Override

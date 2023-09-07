@@ -2,6 +2,8 @@ package com.jmkrijgsman.smartbartender.connection;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
 import com.jmkrijgsman.smartbartender.ui.BartenderCallback;
 import com.jmkrijgsman.smartbartender.connection.commands.IncomingCommandsCache;
 import com.jmkrijgsman.smartbartender.ui.ConnectionCallback;
@@ -42,6 +44,21 @@ public class TcpHandler {
                 }
             }
         }).start();
+    }
+
+    public void startRecipe(Recipe recipe)
+    {
+        try {
+            JSONObject command = new JSONObject();
+            JSONObject data = new JSONObject(new Gson().toJson(recipe));
+
+            command.put("command", "StartRecipe");
+            command.put("data", data);
+
+            client.sendMessage(command.toString());
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
     }
 
     private void onProgressUpdate(String value) {

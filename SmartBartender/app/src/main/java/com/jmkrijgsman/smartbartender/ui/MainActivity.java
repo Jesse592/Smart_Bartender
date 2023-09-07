@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
 
     private final List<Recipe> recipes = new ArrayList<>();
 
-    private TcpHandler tcpHandler;
+    public TcpHandler tcpHandler;
     private RecyclerView rv;
 
     private ProgressBar connectedProgressBar;
@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
         connectedProgressBar = findViewById(R.id.main_activity_bottom_bar_spinner);
         connectedTextView = findViewById(R.id.main_activity_bottom_bar_text);
 
-        new TcpHandler(this).run(hostname, port);
+        this.tcpHandler = new TcpHandler(this);
+        tcpHandler.run(hostname, port);
 
         rv = findViewById(R.id.main_recyclerview);
         RecipeAdapter adapter = new RecipeAdapter(recipes, this);
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
     }
 
     public void onAddRecipeClicked(View view) {
-        new RecipeFragment(this).show(getSupportFragmentManager(), LOGTAG);
+        new RecipeFragment(this, tcpHandler).show(getSupportFragmentManager(), LOGTAG);
     }
 
     @Override

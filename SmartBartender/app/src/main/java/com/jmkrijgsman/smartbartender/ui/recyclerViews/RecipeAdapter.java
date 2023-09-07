@@ -45,7 +45,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         holder.recipeAmountTextView.setText(String.format(Locale.getDefault(), "%dml", selectedRecipe.getTotalAmount()));
 
         holder.itemView.setOnClickListener(v -> {
-            new RecipeFragment(mainActivity, selectedRecipe).show(mainActivity.getSupportFragmentManager(), LOGTAG);
+            new RecipeFragment(mainActivity, mainActivity.tcpHandler, selectedRecipe).show(mainActivity.getSupportFragmentManager(), LOGTAG);
         });
     }
 

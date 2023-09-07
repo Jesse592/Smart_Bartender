@@ -23,7 +23,7 @@ public class TcpClient {
     private final int port;
 
     private TcpMessageListener messageListener;
-    private ConnectionCallback callback;
+    private final ConnectionCallback callback;
     private boolean isRunning = false;
 
     private PrintWriter outBuffer;
