@@ -51,10 +51,10 @@ public class TcpClient {
             outBuffer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
             inBuffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
+            callback.OnConnectionChanged(true);
+
             while (isRunning) {
                 String message = inBuffer.readLine();
-
-                callback.OnConnectionChanged(true);
 
                 if (message != null && messageListener != null)
                     messageListener.OnMessageReceived(message);
