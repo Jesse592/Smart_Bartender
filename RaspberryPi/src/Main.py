@@ -84,22 +84,21 @@ class Bartender():
 	def progressBar(self, waitTime):
 		interval = waitTime / 100.0
 		for x in range(1, 101):
-			self.led.clear_display()
-			self.updateProgressBar(x, y=35)
-			self.led.display()
+			# Update LED screen
 			time.sleep(interval)
 
-	def makeDrink(self, ingredients):
+	def makeDrink(self, recipe):
 		self.running = True
 
 		maxTime = 0
 		pumpThreads = []
-		for ing in ingredients.keys():
+		for ing in recipe["drinkAmounts"]:
 			for pump in self.pump_configuration.keys():
-				if ing == self.pump_configuration[pump]["value"]:
-					waitTime = ingredients[ing] * FLOW_RATE
+				if ing["drinkName"] == self.pump_configuration[pump]["value"]:
+					waitTime = ing["amountInMilliliters"] * FLOW_RATE
 					if (waitTime > maxTime):
 						maxTime = waitTime
+					print(f"Pouring '{ing['drinkName']}' for '{waitTime}' ms")
 					pump_t = threading.Thread(target=self.pour, args=(self.pump_configuration[pump]["pin"], waitTime))
 					pumpThreads.append(pump_t)
 
@@ -124,19 +123,6 @@ class Bartender():
 	def right_btn(self, ctx):
 		if not self.running:
 			return # Here button action
-
-	def updateProgressBar(self, percent, x=15, y=15):
-		height = 10
-		width = self.screen_width-2*x
-		for w in range(0, width):
-			self.led.draw_pixel(w + x, y)
-			self.led.draw_pixel(w + x, y + height)
-		for h in range(0, height):
-			self.led.draw_pixel(x, h + y)
-			self.led.draw_pixel(self.screen_width-x, h + y)
-			for p in range(0, percent):
-				p_loc = int(p/100.0*width)
-				self.led.draw_pixel(x + p_loc, h + y)
     
 	def onClientConnected(self, conn: socket, addr):
 		print(f"Connected to client at: {addr}")
@@ -146,7 +132,14 @@ class Bartender():
 			data = conn.recv(1024)
 			if not data:
 				break
-			conn.sendall(data)
+			print(f"Data received from client ('{addr}'): {data}")
+   
+			jsonData = json.loads(data)
+			command = jsonData["command"]
+   
+			if (command == "StartRecipe"):
+				self.makeDrink(jsonData["data"])
+			
 		print(f"Closed client connection: {addr}")
 		conn.close()
     
