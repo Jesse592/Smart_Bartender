@@ -86,11 +86,11 @@ class Bartender():
 		GPIO.output(pin, GPIO.HIGH)
 
 	def progressBar(self, conn, waitTime):
-		interval = waitTime / 20.0
-		for x in range(1, 21):
+		interval = waitTime / 100.0
+		for x in range(1, 101):
 			# Update LED screen
 			time.sleep(interval)
-			self.updateIsActive(conn, True, x * 5)
+			self.updateIsActive(conn, True, x)
 
 	def makeDrink(self, conn: socket, recipe):
 		self.recipe = recipe     
