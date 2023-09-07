@@ -90,7 +90,6 @@ public class TcpClient {
             outBuffer.close();
         }
 
-        messageListener = null;
         inBuffer = null;
         outBuffer = null;
     }

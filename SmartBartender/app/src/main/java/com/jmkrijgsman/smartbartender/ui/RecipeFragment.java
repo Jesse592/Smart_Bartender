@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.jmkrijgsman.smartbartender.R;
 import com.jmkrijgsman.smartbartender.connection.PumpConfiguration;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class RecipeFragment extends DialogFragment implements DrinkAmountCallback {
+public class RecipeFragment extends DialogFragment implements DrinkAmountCallback, ConnectionCallback {
     private TcpHandler handler;
     private final Recipe recipe;
 
@@ -44,6 +45,8 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
     private DrinkAmountAdapter adapter;
 
     private EditText recipeNameText;
+    private Button produceButton;
+    private ProgressBar progressBar;
 
     public RecipeFragment() {
         this.recipe = new Recipe();
@@ -51,14 +54,20 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
 
     public RecipeFragment(BartenderCallback callback, TcpHandler handler)
     {
-        this.callback = callback;
-        this.recipe = new Recipe();
+        this(callback, handler, new Recipe());
     }
 
     public RecipeFragment(BartenderCallback callback, TcpHandler handler, Recipe recipe) {
         this.callback = callback;
         this.handler = handler;
         this.recipe = recipe;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        handler.addCallback(this);
     }
 
     @Override
@@ -101,6 +110,7 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
         });
         if (recipe.getId() == 0) deleteButton.setVisibility(View.GONE);
 
+        this.progressBar = requireView().findViewById(R.id.recipe_fragment_produce_progress);
         Button saveButton = requireView().findViewById(R.id.recipe_fragment_save_button);
         saveButton.setOnClickListener(v -> {
             recipe.setName(recipeNameText.getText().toString());
@@ -118,8 +128,8 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
             this.callback.OnRecipesChanged();
         });
 
-        Button produceButton = requireView().findViewById(R.id.recipe_fragment_produce_button);
-        produceButton.setOnClickListener(this::onProduceClicked);
+        this.produceButton = requireView().findViewById(R.id.recipe_fragment_produce_button);
+        this.produceButton.setOnClickListener(this::onProduceClicked);
 
         rv = requireView().findViewById(R.id.recipe_fragment_drink_amount_recyclerview);
         adapter = new DrinkAmountAdapter(drinkAmounts, this);
@@ -127,6 +137,13 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
         rv.addItemDecoration(new DividerItemDecoration(rv.getContext(), DividerItemDecoration.VERTICAL));
+    }
+
+    @Override
+    public void onPause() {
+        this.handler.removeCallback(this);
+
+        super.onPause();
     }
 
     private void onProduceClicked(View view) {
@@ -146,5 +163,19 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
         {
             adapter.updateHolderPercentage(rv.findViewHolderForAdapterPosition(i), i);
         }
+    }
+
+    @Override
+    public void OnConnectionChanged(boolean isConnected) {
+        requireActivity().runOnUiThread(() -> produceButton.setEnabled(isConnected));
+    }
+
+    @Override
+    public void OnRecipeChanged(boolean isProcessing, int progress, Recipe recipe) {
+        requireActivity().runOnUiThread(() -> {
+            produceButton.setEnabled(!isProcessing);
+            progressBar.setVisibility(isProcessing ? View.VISIBLE : View.GONE);
+            progressBar.setProgress(progress);
+        });
     }
 }

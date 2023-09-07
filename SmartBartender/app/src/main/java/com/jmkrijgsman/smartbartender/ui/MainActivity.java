@@ -52,7 +52,9 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
         connectedTextView = findViewById(R.id.main_activity_bottom_bar_text);
         mixTextView = findViewById(R.id.main_activity_bottom_bar_mix_text);
 
-        this.tcpHandler = new TcpHandler(this);
+        this.tcpHandler = new TcpHandler();
+        this.tcpHandler.addCallback(this);
+
         tcpHandler.run(hostname, port);
 
         rv = findViewById(R.id.main_recyclerview);
