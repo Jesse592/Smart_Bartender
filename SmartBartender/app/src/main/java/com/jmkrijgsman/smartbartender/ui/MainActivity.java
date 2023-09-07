@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
     private static final String LOGTAG = "MainActivity";
 
     //private static final String hostname = "192.168.4.1";
-    private static final String hostname = "145.49.16.132";
+    private static final String hostname = "145.49.57.118";
     private static final int port = 65432;
 
     private final List<Recipe> recipes = new ArrayList<>();

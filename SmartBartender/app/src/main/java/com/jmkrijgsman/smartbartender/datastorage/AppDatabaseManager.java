@@ -42,7 +42,7 @@ public class AppDatabaseManager implements DataStorage{
     @Override
     public List<Recipe> getRecipes() {
         List<Recipe> recipes = database.recipeDAO().getRecipes();
-        recipes.forEach(r -> r.setDrinkAmounts(database.recipeDAO().getDrinkAmountsWithRecipe(r.getName())));
+        recipes.forEach(r -> r.setDrinkAmounts(database.recipeDAO().getDrinkAmountsWithRecipe(r.getId())));
         return recipes;
     }
 
@@ -50,8 +50,11 @@ public class AppDatabaseManager implements DataStorage{
     public void insertRecipe(Recipe recipe) {
         new Thread(() ->
         {
-            database.recipeDAO().insertRecipe(recipe);
-            recipe.getDrinkAmounts().forEach(r -> database.recipeDAO().insertDrinkAmount(r));
+            long id = database.recipeDAO().insertRecipe(recipe);
+            recipe.getDrinkAmounts().forEach(r -> {
+                r.setRecipeId((int)id);
+                database.recipeDAO().insertDrinkAmount(r);
+            });
         }).start();
     }
 }

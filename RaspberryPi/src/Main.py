@@ -6,7 +6,7 @@ import socket
 import RPi.GPIO as GPIO
 
 #HOST = "192.168.4.1"  # Make IP static or update field dynamicly
-HOST = "145.49.16.132"
+HOST = "145.49.57.118"
 PORT = 65432
 
 LEFT_BTN_PIN = 13

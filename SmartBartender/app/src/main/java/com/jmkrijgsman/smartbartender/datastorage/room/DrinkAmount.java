@@ -7,12 +7,12 @@ import androidx.room.Ignore;
 
 import com.jmkrijgsman.smartbartender.connection.PumpConfiguration;
 
-@Entity(primaryKeys = {"RecipeName","DrinkName"})
+@Entity(primaryKeys = {"RecipeId","DrinkName"})
 public class DrinkAmount {
 
-    @ColumnInfo(name = "RecipeName")
+    @ColumnInfo(name = "RecipeId")
     @NonNull
-    private String recipeName;
+    private int recipeId;
 
     @ColumnInfo(name = "DrinkName")
     @NonNull
@@ -21,8 +21,8 @@ public class DrinkAmount {
     @ColumnInfo(name = "Amount")
     private int amountInMilliliters;
 
-    public DrinkAmount(String recipeName, String drinkName, int amountInMilliliters) {
-        this.recipeName = recipeName;
+    public DrinkAmount(int recipeId, String drinkName, int amountInMilliliters) {
+        this.recipeId = recipeId;
         this.drinkName = drinkName;
         this.amountInMilliliters = amountInMilliliters;
     }
@@ -30,18 +30,18 @@ public class DrinkAmount {
     @Ignore
     public DrinkAmount(Recipe recipe, PumpConfiguration pumpConfiguration)
     {
-        this.recipeName = recipe.getName();
+        this.recipeId = recipe.getId();
         this.drinkName = pumpConfiguration.getDrink();
         this.amountInMilliliters = 0;
     }
 
 
-    public String getRecipeName() {
-        return recipeName;
+    public int getRecipeId() {
+        return this.recipeId;
     }
 
-    public void setRecipeName(String recipeName) {
-        this.recipeName = recipeName;
+    public void setRecipeId(int recipeId) {
+        this.recipeId = recipeId;
     }
 
     public String getDrinkName() {

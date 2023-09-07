@@ -12,12 +12,15 @@ import com.jmkrijgsman.smartbartender.R;
 import com.jmkrijgsman.smartbartender.datastorage.room.DrinkAmount;
 import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
 import com.jmkrijgsman.smartbartender.ui.MainActivity;
+import com.jmkrijgsman.smartbartender.ui.RecipeFragment;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
+    private static final String LOGTAG = "RecipeAdapter";
+
     private final List<Recipe> recipes;
     private final MainActivity mainActivity;
 
@@ -40,6 +43,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         holder.recipeNameTextView.setText(selectedRecipe.getName());
         holder.recipeDrinksTextView.setText(selectedRecipe.getDrinkAmounts().stream().map(DrinkAmount::getDrinkName).collect(Collectors.joining(", ")));
         holder.recipeAmountTextView.setText(String.format(Locale.getDefault(), "%dml", selectedRecipe.getTotalAmount()));
+
+        holder.itemView.setOnClickListener(v -> {
+            new RecipeFragment(mainActivity, selectedRecipe).show(mainActivity.getSupportFragmentManager(), LOGTAG);
+        });
     }
 
     @Override

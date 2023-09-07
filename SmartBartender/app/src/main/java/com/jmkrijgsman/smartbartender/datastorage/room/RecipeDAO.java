@@ -12,11 +12,11 @@ public interface RecipeDAO {
     @Query("SELECT * FROM Recipe")
     List<Recipe> getRecipes();
 
-    @Query("SELECT * FROM DrinkAmount WHERE RecipeName =:recipeName")
-    List<DrinkAmount> getDrinkAmountsWithRecipe(String recipeName);
+    @Query("SELECT * FROM DrinkAmount WHERE RecipeId =:recipeId")
+    List<DrinkAmount> getDrinkAmountsWithRecipe(int recipeId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertRecipe(Recipe recipe);
+    long insertRecipe(Recipe recipe);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertDrinkAmount(DrinkAmount drink);

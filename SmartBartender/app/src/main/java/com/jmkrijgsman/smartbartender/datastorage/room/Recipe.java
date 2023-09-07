@@ -14,7 +14,13 @@ import java.util.Map;
 @Entity
 public class Recipe {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @NonNull
     @ColumnInfo(name = "Name")
     private String name;
@@ -51,5 +57,9 @@ public class Recipe {
     public int getTotalAmount()
     {
         return drinkAmounts.stream().mapToInt(DrinkAmount::getAmountInMilliliters).sum();
+    }
+
+    public int getId() {
+        return id;
     }
 }

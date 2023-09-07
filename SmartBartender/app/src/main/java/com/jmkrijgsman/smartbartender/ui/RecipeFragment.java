@@ -89,17 +89,16 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
         List<DrinkAmount> drinkAmounts = setDrinkAmounts();
 
         recipeNameText = requireView().findViewById(R.id.recipe_fragment_name_edit);
+        recipeNameText.setText(recipe.getName());
+
         saveButton = requireView().findViewById(R.id.recipe_fragment_save_button);
         saveButton.setOnClickListener(v -> {
             recipe.setName(recipeNameText.getText().toString());
 
             List<DrinkAmount> nonEmptyDrinkAmounts = new ArrayList<>();
-
-            this.drinkAmounts.forEach(d -> {
-                if (d.getAmountInMilliliters() == 0) return;
-
-                d.setRecipeName(recipe.getName());
-                nonEmptyDrinkAmounts.add(d);
+            drinkAmounts.forEach(d -> {
+                if (d.getAmountInMilliliters() != 0)
+                    nonEmptyDrinkAmounts.add(d);
             });
 
             recipe.setDrinkAmounts(nonEmptyDrinkAmounts);
