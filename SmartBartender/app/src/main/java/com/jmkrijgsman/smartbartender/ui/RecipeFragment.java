@@ -68,7 +68,7 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
         List<DrinkAmount> list = new ArrayList<>(recipe.getDrinkAmounts());
 
         PumpConfigurationCache.getInstance().getPumpConfigurations().forEach((p) -> {
-            if (!p.getDrink().equals("null"))
+            if (!p.getDrink().equals("null") && list.stream().noneMatch(d -> d.getDrinkName().equals(p.getDrink())))
                 list.add(new DrinkAmount(this.recipe, p));
         });
 
