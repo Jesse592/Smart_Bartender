@@ -165,7 +165,7 @@ class Bartender():
 				except KeyboardInterrupt:
 					self.isRunning = False
 					print("Shutting down...") # Consider sending close to all clients
-				except:
+				except Exception:
 					print("Exception in client connection caught")
      
 			s.shutdown(socket.SHUT_RDWR)
