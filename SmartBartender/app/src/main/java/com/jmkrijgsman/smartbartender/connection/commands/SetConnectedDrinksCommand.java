@@ -3,6 +3,7 @@ package com.jmkrijgsman.smartbartender.connection.commands;
 import com.jmkrijgsman.smartbartender.connection.PumpConfiguration;
 import com.jmkrijgsman.smartbartender.connection.PumpConfigurationCache;
 import com.jmkrijgsman.smartbartender.ui.BartenderCallback;
+import com.jmkrijgsman.smartbartender.ui.ConnectionCallback;
 
 import org.json.JSONObject;
 
@@ -19,7 +20,7 @@ public class SetConnectedDrinksCommand implements IncomingCommand{
     }
 
     @Override
-    public void Handle(JSONObject data, BartenderCallback callback) {
+    public void Handle(JSONObject data, ConnectionCallback callback) {
         List<PumpConfiguration> configurations = new ArrayList<>();
 
         data.keys().forEachRemaining(p -> {

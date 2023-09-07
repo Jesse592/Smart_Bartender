@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.jmkrijgsman.smartbartender.ui.BartenderCallback;
 import com.jmkrijgsman.smartbartender.connection.commands.IncomingCommandsCache;
+import com.jmkrijgsman.smartbartender.ui.ConnectionCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,10 +18,10 @@ public class TcpHandler {
     private String hostname;
     private int port;
 
-    private final BartenderCallback callback;
+    private final ConnectionCallback callback;
     private TcpClient client;
 
-    public TcpHandler(BartenderCallback callback) {
+    public TcpHandler(ConnectionCallback callback) {
         this.callback = callback;
     }
 

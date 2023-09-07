@@ -3,6 +3,7 @@ package com.jmkrijgsman.smartbartender.connection;
 import android.util.Log;
 
 import com.jmkrijgsman.smartbartender.ui.BartenderCallback;
+import com.jmkrijgsman.smartbartender.ui.ConnectionCallback;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,13 +23,13 @@ public class TcpClient {
     private final int port;
 
     private TcpMessageListener messageListener;
-    private BartenderCallback callback;
+    private ConnectionCallback callback;
     private boolean isRunning = false;
 
     private PrintWriter outBuffer;
     private BufferedReader inBuffer;
 
-    public TcpClient(String hostname, int port, TcpMessageListener listener, BartenderCallback callback)
+    public TcpClient(String hostname, int port, TcpMessageListener listener, ConnectionCallback callback)
     {
         this.hostname = hostname;
         this.port = port;

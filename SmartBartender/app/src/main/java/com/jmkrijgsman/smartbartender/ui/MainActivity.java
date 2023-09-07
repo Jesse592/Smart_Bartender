@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements BartenderCallback {
+public class MainActivity extends AppCompatActivity implements BartenderCallback, ConnectionCallback {
     private static final String LOGTAG = "MainActivity";
 
     //private static final String hostname = "192.168.4.1";
