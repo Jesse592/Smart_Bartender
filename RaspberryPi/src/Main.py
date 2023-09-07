@@ -73,22 +73,28 @@ class Bartender():
 		# sleep for a couple seconds to make sure the interrupts don't get triggered
 		time.sleep(2)
 
-		self.running = False
+		self.updateIsActive(False)
 
+	def updateIsActive(self, conn: socket, running, progress = None):
+		self.running = running
+
+		conn.send((json.dumps({'command': 'RecipeChanged', 'data': {'isProcessing': running, 'progress': progress, 'recipe': self.recipe}}) + "\r\n").encode())
 
 	def pour(self, pin, waitTime):
 		GPIO.output(pin, GPIO.LOW)
 		time.sleep(waitTime)
 		GPIO.output(pin, GPIO.HIGH)
 
-	def progressBar(self, waitTime):
-		interval = waitTime / 100.0
-		for x in range(1, 101):
+	def progressBar(self, conn, waitTime):
+		interval = waitTime / 20.0
+		for x in range(1, 21):
 			# Update LED screen
 			time.sleep(interval)
+			self.updateIsActive(conn, True, x * 5)
 
-	def makeDrink(self, recipe):
-		self.running = True
+	def makeDrink(self, conn: socket, recipe):
+		self.recipe = recipe     
+		self.updateIsActive(conn, True)
 
 		maxTime = 0
 		pumpThreads = []
@@ -98,14 +104,14 @@ class Bartender():
 					waitTime = ing["amountInMilliliters"] * FLOW_RATE
 					if (waitTime > maxTime):
 						maxTime = waitTime
-					print(f"Pouring '{ing['drinkName']}' for '{waitTime}' ms")
+					print(f"Pouring '{ing['drinkName']}' for '{waitTime}' s")
 					pump_t = threading.Thread(target=self.pour, args=(self.pump_configuration[pump]["pin"], waitTime))
 					pumpThreads.append(pump_t)
 
 		for thread in pumpThreads:
 			thread.start()
 
-		self.progressBar(maxTime)
+		self.progressBar(conn, maxTime)
 
 		# wait for threads to finish
 		for thread in pumpThreads:
@@ -114,7 +120,7 @@ class Bartender():
 		# sleep for a couple seconds to make sure the interrupts don't get triggered
 		time.sleep(2)
 
-		self.running = False
+		self.updateIsActive(conn, False)
 
 	def left_btn(self, ctx):
 		if not self.running:
@@ -138,7 +144,7 @@ class Bartender():
 			command = jsonData["command"]
    
 			if (command == "StartRecipe"):
-				self.makeDrink(jsonData["data"])
+				self.makeDrink(conn, jsonData["data"])
 			
 		print(f"Closed client connection: {addr}")
 		conn.close()
