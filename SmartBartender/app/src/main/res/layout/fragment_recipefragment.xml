@@ -61,6 +61,17 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/recipe_fragment_produce_button"
         app:layout_constraintBottom_toBottomOf="@id/recipe_fragment_produce_button"
+        app:layout_constraintRight_toLeftOf="@id/recipe_fragment_save_button"
+        android:layout_marginEnd="16dp"
+        android:textSize="14sp"
+        android:id="@+id/recipe_fragment_delete_button"
+        android:text="@string/delete_button_text"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/recipe_fragment_produce_button"
+        app:layout_constraintBottom_toBottomOf="@id/recipe_fragment_produce_button"
         app:layout_constraintRight_toLeftOf="@id/recipe_fragment_produce_button"
         android:layout_marginEnd="16dp"
         android:textSize="14sp"

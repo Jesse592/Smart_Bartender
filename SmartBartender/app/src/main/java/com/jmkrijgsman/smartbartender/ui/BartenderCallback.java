@@ -6,4 +6,5 @@ public interface BartenderCallback {
     void OnConnectionChanged(boolean isConnected);
     void OnRecipeChanged(boolean isProcessing , Recipe recipe);
     void OnRecipesChanged();
+    void OnRecipeDeleted(Recipe recipe);
 }

@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
 
     private TcpHandler tcpHandler;
     private RecyclerView rv;
-    private RecipeAdapter adapter;
 
     private ProgressBar connectedProgressBar;
     private ImageView connectedBar;
@@ -51,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
         new TcpHandler(this).run(hostname, port);
 
         rv = findViewById(R.id.main_recyclerview);
-        adapter = new RecipeAdapter(recipes, this);
+        RecipeAdapter adapter = new RecipeAdapter(recipes, this);
 
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
@@ -103,5 +102,11 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
 
             runOnUiThread(() -> Objects.requireNonNull(rv.getAdapter()).notifyItemRangeChanged(0,tempList.size()));
         }).start();
+    }
+
+    public void OnRecipeDeleted(Recipe recipe)
+    {
+        this.recipes.remove(recipe);
+        runOnUiThread(() -> Objects.requireNonNull(rv.getAdapter()).notifyDataSetChanged());
     }
 }

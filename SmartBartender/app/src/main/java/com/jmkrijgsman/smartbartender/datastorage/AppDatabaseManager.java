@@ -58,4 +58,9 @@ public class AppDatabaseManager implements DataStorage{
             });
         }).start();
     }
+
+    @Override
+    public void deleteRecipe(Recipe recipe) {
+        new Thread(() -> database.recipeDAO().deleteRecipe(recipe)).start();
+    }
 }

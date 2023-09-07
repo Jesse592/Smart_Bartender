@@ -7,4 +7,5 @@ import java.util.List;
 public interface DataStorage {
     List<Recipe> getRecipes();
     void insertRecipe(Recipe recipe);
+    void deleteRecipe(Recipe recipe);
 }

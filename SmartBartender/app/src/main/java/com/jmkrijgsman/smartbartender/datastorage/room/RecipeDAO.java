@@ -16,6 +16,9 @@ public interface RecipeDAO {
     @Query("SELECT * FROM DrinkAmount WHERE RecipeId =:recipeId")
     List<DrinkAmount> getDrinkAmountsWithRecipe(int recipeId);
 
+    @Delete
+    void deleteRecipe(Recipe recipe);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertRecipe(Recipe recipe);
 

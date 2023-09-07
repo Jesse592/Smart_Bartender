@@ -42,7 +42,6 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
     private DrinkAmountAdapter adapter;
 
     private EditText recipeNameText;
-    private Button saveButton;
 
     public RecipeFragment() {
         this.recipe = new Recipe();
@@ -91,7 +90,15 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
         recipeNameText = requireView().findViewById(R.id.recipe_fragment_name_edit);
         recipeNameText.setText(recipe.getName());
 
-        saveButton = requireView().findViewById(R.id.recipe_fragment_save_button);
+        Button deleteButton = requireView().findViewById(R.id.recipe_fragment_delete_button);
+        deleteButton.setOnClickListener(v -> {
+            AppDatabaseManager.getInstance(getContext()).deleteRecipe(recipe);
+            this.callback.OnRecipeDeleted(recipe);
+            dismiss();
+        });
+        if (recipe.getId() == 0) deleteButton.setVisibility(View.GONE);
+
+        Button saveButton = requireView().findViewById(R.id.recipe_fragment_save_button);
         saveButton.setOnClickListener(v -> {
             recipe.setName(recipeNameText.getText().toString());
 
@@ -102,11 +109,10 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
             });
 
             recipe.setDrinkAmounts(nonEmptyDrinkAmounts);
-
             AppDatabaseManager.getInstance(getContext()).insertRecipe(recipe);
 
-            this.callback.OnRecipesChanged();
             dismiss();
+            this.callback.OnRecipesChanged();
         });
 
         rv = requireView().findViewById(R.id.recipe_fragment_drink_amount_recyclerview);
