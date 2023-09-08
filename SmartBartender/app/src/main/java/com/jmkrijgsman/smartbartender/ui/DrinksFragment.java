@@ -17,11 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jmkrijgsman.smartbartender.R;
+import com.jmkrijgsman.smartbartender.connection.PumpConfiguration;
 import com.jmkrijgsman.smartbartender.connection.PumpConfigurationCache;
 import com.jmkrijgsman.smartbartender.connection.TcpHandler;
 import com.jmkrijgsman.smartbartender.datastorage.AppDatabaseManager;
 import com.jmkrijgsman.smartbartender.datastorage.room.DrinkAmount;
 import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
+import com.jmkrijgsman.smartbartender.ui.recyclerViews.ConnectedDrinkCallback;
 import com.jmkrijgsman.smartbartender.ui.recyclerViews.ConnectedDrinksAdapter;
 import com.jmkrijgsman.smartbartender.ui.recyclerViews.DrinkAmountAdapter;
 import com.jmkrijgsman.smartbartender.ui.recyclerViews.DrinkAmountCallback;
@@ -29,7 +31,7 @@ import com.jmkrijgsman.smartbartender.ui.recyclerViews.DrinkAmountCallback;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DrinksFragment extends DialogFragment implements ConnectionCallback {
+public class DrinksFragment extends DialogFragment implements ConnectionCallback, ConnectedDrinkCallback {
     private TcpHandler handler;
 
     private RecyclerView rv;
@@ -64,7 +66,7 @@ public class DrinksFragment extends DialogFragment implements ConnectionCallback
         }
 
         rv = requireView().findViewById(R.id.recipe_fragment_connected_drinks_recyclerview);
-        adapter = new ConnectedDrinksAdapter(PumpConfigurationCache.getInstance().getPumpConfigurations());
+        adapter = new ConnectedDrinksAdapter(PumpConfigurationCache.getInstance().getPumpConfigurations(), this);
 
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
@@ -92,5 +94,10 @@ public class DrinksFragment extends DialogFragment implements ConnectionCallback
     @Override
     public void OnRecipeChanged(boolean isProcessing, int progress, Recipe recipe) {
 
+    }
+
+    @Override
+    public void onCleanButtonPressed(PumpConfiguration cfg, boolean runCleaning) {
+        this.handler.cleanPump(cfg, runCleaning);
     }
 }

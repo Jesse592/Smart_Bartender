@@ -72,6 +72,24 @@ public class TcpHandler implements ConnectionCallback {
         }
     }
 
+    public void cleanPump(PumpConfiguration cfg, boolean runCleaning) {
+        try {
+            JSONObject command = new JSONObject();
+            JSONObject data = new JSONObject();
+            JSONObject pump = new JSONObject(new Gson().toJson(cfg));
+
+            data.put("running", runCleaning);
+            data.put("pump", pump);
+
+            command.put("command", "RunPump");
+            command.put("data", data);
+
+            client.sendMessage(command.toString());
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+    }
+
     private void onProgressUpdate(String value) {
         Log.d(LOGTAG, "response " + value);
 

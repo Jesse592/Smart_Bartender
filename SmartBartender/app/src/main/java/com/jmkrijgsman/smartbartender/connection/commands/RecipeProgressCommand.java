@@ -13,6 +13,9 @@ public class RecipeProgressCommand implements IncomingCommand {
 
     @Override
     public void Handle(JSONObject data, ConnectionCallback callback) {
-        callback.OnRecipeChanged(data.optBoolean("isProcessing"), data.optInt("progress", 0), new Recipe(data.optJSONObject("recipe")));
+        JSONObject recipeData = data.optJSONObject("recipe");
+
+        if (recipeData != null)
+            callback.OnRecipeChanged(data.optBoolean("isProcessing"), data.optInt("progress", 0), new Recipe(recipeData));
     }
 }

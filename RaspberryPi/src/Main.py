@@ -25,6 +25,7 @@ class Bartender():
   
 		self.btn1Pin = LEFT_BTN_PIN
 		self.btn2Pin = RIGHT_BTN_PIN
+		self.recipe = None
   
 		GPIO.setup(self.btn1Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(self.btn2Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) 
@@ -56,29 +57,14 @@ class Bartender():
 		GPIO.remove_event_detect(self.btn1Pin)
 		GPIO.remove_event_detect(self.btn2Pin)
 
-	def clean(self):
-		waitTime = 20
-		pumpThreads = []
-
-		self.running = True
-
-		for pump in self.pump_configuration.keys():
-			pump_t = threading.Thread(target=self.pour, args=(self.pump_configuration[pump]["pin"], waitTime))
-			pumpThreads.append(pump_t)
-
-		for thread in pumpThreads:
-			thread.start()
-
-		self.progressBar(waitTime)
-
-		# wait for threads to finish
-		for thread in pumpThreads:
-			thread.join()
-
-		# sleep for a couple seconds to make sure the interrupts don't get triggered
-		time.sleep(2)
-
-		self.updateIsActive(False)
+	def clean(self, conn, pump):
+		self.updateIsActive(conn, True)
+  
+		while (self.isCleaning):
+			print(f"Cleaning...")
+			self.pour(pump["key"], 1)
+		
+		self.updateIsActive(conn, False)
 
 	def updateIsActive(self, conn: socket, running, progress = None):
 		self.running = running
@@ -150,6 +136,12 @@ class Bartender():
    
 			if (command == "StartRecipe"):
 				self.makeDrink(conn, jsonData["data"])
+			elif (command == "RunPump"):
+				if (jsonData["data"]["running"]):
+					self.isCleaning = True
+					threading.Thread(target=self.clean, args=(conn, jsonData["data"]["pump"])).start()
+				else:
+					self.isCleaning = False
 			
 		print(f"Closed client connection: {addr}")
 		conn.close()

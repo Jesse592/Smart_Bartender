@@ -1,6 +1,8 @@
 package com.jmkrijgsman.smartbartender.ui.recyclerViews;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,9 +21,11 @@ import java.util.Locale;
 
 public class ConnectedDrinksAdapter extends RecyclerView.Adapter<ConnectedDrinksAdapter.ConnectedDrinksViewHolder> {
     private final List<PumpConfiguration> pumpConfigurations;
+    private ConnectedDrinkCallback callback;
 
-    public ConnectedDrinksAdapter(List<PumpConfiguration> pumpConfigurations) {
+    public ConnectedDrinksAdapter(List<PumpConfiguration> pumpConfigurations, ConnectedDrinkCallback callback) {
         this.pumpConfigurations = pumpConfigurations;
+        this.callback = callback;
     }
 
     @NonNull
@@ -31,14 +35,25 @@ public class ConnectedDrinksAdapter extends RecyclerView.Adapter<ConnectedDrinks
         return new ConnectedDrinksViewHolder(viewItem);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull ConnectedDrinksViewHolder holder, int position) {
         PumpConfiguration cfg = pumpConfigurations.get(position);
 
-        if (cfg.getDrink().equals("null")) holder.pumpNameTextView.setText(cfg.getName());
-        else holder.pumpNameTextView.setText("");
+        if (cfg.getDrink().equals("null")) holder.drinkNameTextView.setText("");
+        else holder.drinkNameTextView.setText(cfg.getDrink());
 
-        holder.drinkNameTextView.setText(cfg.getDrink());
+        holder.pumpNameTextView.setText(cfg.getName());
+        holder.cleanButton.setOnTouchListener((view, motionEvent) ->
+        {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
+                this.callback.onCleanButtonPressed(cfg, true);
+            else if (motionEvent.getAction() == MotionEvent.ACTION_UP)
+            {
+                this.callback.onCleanButtonPressed(cfg, false);
+            }
+            return false;
+        });
     }
 
     @Override
