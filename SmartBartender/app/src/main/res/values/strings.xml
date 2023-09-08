@@ -12,4 +12,5 @@
     <string name="start_button_text">Start</string>
     <string name="delete_button_text">Delete</string>
     <string name="not_connected">not connected</string>
+    <string name="drinks">Drinks</string>
 </resources>

@@ -5,8 +5,8 @@ import traceback
 import socket
 import RPi.GPIO as GPIO
 
-HOST = "192.168.4.1"  # Make IP static or update field dynamicly
-#HOST = "145.49.57.118"
+#HOST = "192.168.4.1"  # Make IP static or update field dynamicly
+HOST = "145.49.12.93"
 PORT = 65432
 
 GPIO.setmode(GPIO.BCM)

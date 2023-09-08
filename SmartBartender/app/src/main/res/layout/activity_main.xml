@@ -100,4 +100,18 @@
         android:onClick="onAddRecipeClicked"
         android:contentDescription="@string/add_new_recipe"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/main_activity_drinks_FAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:backgroundTint="@color/design_default_color_secondary"
+        android:scaleType="center"
+        android:src="@drawable/ic_outline_local_drink_24"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/map_view_stop_FAB"
+        app:layout_constraintRight_toRightOf="parent"
+        android:onClick="onDrinksClicked"
+        android:contentDescription="@string/add_new_recipe"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

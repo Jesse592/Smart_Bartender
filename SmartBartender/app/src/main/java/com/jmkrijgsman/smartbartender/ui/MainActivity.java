@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jmkrijgsman.smartbartender.R;
 import com.jmkrijgsman.smartbartender.connection.TcpHandler;
 import com.jmkrijgsman.smartbartender.datastorage.AppDatabaseManager;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
     private static final String LOGTAG = "MainActivity";
 
     //private static final String hostname = "192.168.4.1";
-    private static final String hostname = "145.49.57.118";
+    private static final String hostname = "145.49.12.93";
     private static final int port = 65432;
 
     private final List<Recipe> recipes = new ArrayList<>();
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
     public TcpHandler tcpHandler;
     private RecyclerView rv;
 
+    private FloatingActionButton drinksFAB;
     private ProgressBar connectedProgressBar;
     private ProgressBar mixProgressBar;
     private ImageView connectedBar;
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
         mixProgressBar = findViewById(R.id.main_activity_bottom_bar_progress);
         connectedTextView = findViewById(R.id.main_activity_bottom_bar_text);
         mixTextView = findViewById(R.id.main_activity_bottom_bar_mix_text);
+        drinksFAB = findViewById(R.id.main_activity_drinks_FAB);
 
         this.tcpHandler = new TcpHandler();
         this.tcpHandler.addCallback(this);
@@ -83,14 +86,17 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
             mixTextView.setVisibility(View.INVISIBLE);
             connectedTextView.setVisibility(View.VISIBLE);
 
+
             if (isConnected)
             {
                 connectedProgressBar.setVisibility(View.INVISIBLE);
+                drinksFAB.setVisibility(View.VISIBLE);
                 connectedBar.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.tcp_connection_connected, getApplicationContext().getTheme()));
                 connectedTextView.setText(R.string.connected_text);
             } else
             {
                 connectedProgressBar.setVisibility(View.VISIBLE);
+                drinksFAB.setVisibility(View.GONE);
                 connectedBar.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.tcp_connection_not_connected, getApplicationContext().getTheme()));
                 connectedTextView.setText(R.string.not_connected_text);
             }
@@ -136,5 +142,9 @@ public class MainActivity extends AppCompatActivity implements BartenderCallback
     {
         this.recipes.remove(recipe);
         runOnUiThread(() -> Objects.requireNonNull(rv.getAdapter()).notifyDataSetChanged());
+    }
+
+    public void onDrinksClicked(View view) {
+        new DrinksFragment(tcpHandler).show(getSupportFragmentManager(), LOGTAG);
     }
 }

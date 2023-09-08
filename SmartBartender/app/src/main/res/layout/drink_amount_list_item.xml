@@ -31,7 +31,7 @@
         />
 
     <TextView
-        android:layout_width="50dp"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/drink_amount_select_item_amount"
         app:layout_constraintRight_toRightOf="@id/drink_amount_select_item_amount"
@@ -39,7 +39,7 @@
         android:id="@+id/drink_amount_select_item_percentage"/>
 
     <TextView
-        android:layout_width="50dp"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
