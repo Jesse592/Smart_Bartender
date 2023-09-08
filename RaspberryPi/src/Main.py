@@ -5,9 +5,11 @@ import traceback
 import socket
 import RPi.GPIO as GPIO
 
-#HOST = "192.168.4.1"  # Make IP static or update field dynamicly
-HOST = "145.49.57.118"
+HOST = "192.168.4.1"  # Make IP static or update field dynamicly
+#HOST = "145.49.57.118"
 PORT = 65432
+
+GPIO.setmode(GPIO.BCM)
 
 LEFT_BTN_PIN = 13
 LEFT_PIN_BOUNCE = 1000
@@ -15,20 +17,23 @@ LEFT_PIN_BOUNCE = 1000
 RIGHT_BTN_PIN = 5
 RIGHT_PIN_BOUNCE = 2000
 
-FLOW_RATE = 60.0/100.0
+FLOW_RATE = 60.0/500.0
 
 class Bartender(): 
-	def __init__(self):
+	def __init__(self):     
 		self.running = False
   
 		self.btn1Pin = LEFT_BTN_PIN
 		self.btn2Pin = RIGHT_BTN_PIN
   
+		GPIO.setup(self.btn1Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(self.btn2Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) 
+  
 		# load the pump configuration from file
 		self.pump_configuration = Bartender.readPumpConfiguration()
   
 		for pump in self.pump_configuration.keys():
-			GPIO.setup(self.pump_configuration[pump]["pin"], GPIO.OUT, initial=GPIO.HIGH)
+			GPIO.setup(self.pump_configuration[pump]["pin"], GPIO.OUT, initial=GPIO.LOW)
 
 		print("Done initializing")
 
@@ -81,9 +86,9 @@ class Bartender():
 		conn.send((json.dumps({'command': 'RecipeChanged', 'data': {'isProcessing': running, 'progress': progress, 'recipe': self.recipe}}) + "\r\n").encode())
 
 	def pour(self, pin, waitTime):
-		GPIO.output(pin, GPIO.LOW)
-		time.sleep(waitTime)
 		GPIO.output(pin, GPIO.HIGH)
+		time.sleep(waitTime)
+		GPIO.output(pin, GPIO.LOW)
 
 	def progressBar(self, conn, waitTime):
 		interval = waitTime / 100.0
