@@ -1,0 +1,12 @@
+[Unit]
+Description="Smart Bartender service"
+
+[Service]
+User=root
+WorkingDirectory=/home/pi/src
+ExecStart=/bin/bash -c 'cd /home/pi/src && python Main.py'
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
