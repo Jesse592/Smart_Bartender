@@ -4,31 +4,22 @@ import threading
 import traceback
 import socket
 import RPi.GPIO as GPIO
+from menu import Menu
 
-#HOST = "192.168.4.1"  # Make IP static or update field dynamicly
-HOST = "145.49.12.93"
+HOST = "192.168.4.1"  # Make IP static or update field dynamicly
+#HOST = "145.49.12.93"
 PORT = 65432
 
 GPIO.setmode(GPIO.BCM)
-
-LEFT_BTN_PIN = 13
-LEFT_PIN_BOUNCE = 1000
-
-RIGHT_BTN_PIN = 5
-RIGHT_PIN_BOUNCE = 2000
 
 FLOW_RATE = 60.0/500.0
 
 class Bartender(): 
 	def __init__(self):     
+		self.menu = Menu()
 		self.running = False
   
-		self.btn1Pin = LEFT_BTN_PIN
-		self.btn2Pin = RIGHT_BTN_PIN
 		self.recipe = None
-  
-		GPIO.setup(self.btn1Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-		GPIO.setup(self.btn2Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) 
   
 		# load the pump configuration from file
 		self.pump_configuration = Bartender.readPumpConfiguration()
@@ -46,16 +37,6 @@ class Bartender():
 	def writePumpConfiguration(configuration):
 		with open("pump_config.json", "w") as jsonFile:
 			json.dump(configuration, jsonFile)
-
-	def startInterrupts(self):
-		print("Button interupt started")
-		GPIO.add_event_detect(self.btn1Pin, GPIO.FALLING, callback=self.left_btn, bouncetime=LEFT_PIN_BOUNCE)
-		GPIO.add_event_detect(self.btn2Pin, GPIO.FALLING, callback=self.right_btn, bouncetime=RIGHT_PIN_BOUNCE)  
-
-	def stopInterrupts(self):
-		print("Button interupt stoped")
-		GPIO.remove_event_detect(self.btn1Pin)
-		GPIO.remove_event_detect(self.btn2Pin)
 
 	def clean(self, conn, pump):
 		self.updateIsActive(conn, True)
@@ -122,6 +103,7 @@ class Bartender():
 			return # Here button action
     
 	def onClientConnected(self, conn: socket, addr):
+		self.menu.setText("Connected")
 		print(f"Connected to client at: {addr}")
   
 		conn.send((json.dumps({'command': 'ConnectedDrinks', 'data': self.pump_configuration}) + "\r\n").encode())
@@ -147,8 +129,8 @@ class Bartender():
 		conn.close()
     
 	def run(self):
-		self.startInterrupts()
-  
+		self.menu.setText("Smartbartender")
+
 		with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			s.bind((HOST, PORT))
 			s.listen()
