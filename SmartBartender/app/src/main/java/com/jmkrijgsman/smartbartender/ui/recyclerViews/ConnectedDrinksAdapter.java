@@ -1,11 +1,16 @@
 package com.jmkrijgsman.smartbartender.ui.recyclerViews;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,17 +27,22 @@ import java.util.Locale;
 public class ConnectedDrinksAdapter extends RecyclerView.Adapter<ConnectedDrinksAdapter.ConnectedDrinksViewHolder> {
     private final List<PumpConfiguration> pumpConfigurations;
     private ConnectedDrinkCallback callback;
+    private Activity activity;
 
-    public ConnectedDrinksAdapter(List<PumpConfiguration> pumpConfigurations, ConnectedDrinkCallback callback) {
+    public ConnectedDrinksAdapter(List<PumpConfiguration> pumpConfigurations, ConnectedDrinkCallback callback, Activity activity) {
         this.pumpConfigurations = pumpConfigurations;
         this.callback = callback;
+        this.activity = activity;
     }
 
     @NonNull
     @Override
     public ConnectedDrinksViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View viewItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.connected_drink_list_item, parent, false);
-        return new ConnectedDrinksViewHolder(viewItem);
+
+        ConnectedDrinksViewHolder holder = new ConnectedDrinksViewHolder(viewItem);
+        holder.editText = new EditText(this.activity);
+        return holder;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -42,6 +52,8 @@ public class ConnectedDrinksAdapter extends RecyclerView.Adapter<ConnectedDrinks
 
         if (cfg.getDrink().equals("null")) holder.drinkNameTextView.setText("");
         else holder.drinkNameTextView.setText(cfg.getDrink());
+
+        holder.nameEditButton.setOnClickListener(v -> editDrinkName(cfg, holder));
 
         holder.pumpNameTextView.setText(cfg.getName());
         holder.cleanButton.setOnTouchListener((view, motionEvent) ->
@@ -56,6 +68,23 @@ public class ConnectedDrinksAdapter extends RecyclerView.Adapter<ConnectedDrinks
         });
     }
 
+    private void editDrinkName(PumpConfiguration cfg, ConnectedDrinksViewHolder holder) {
+        holder.editText.setHint(cfg.getDrink());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
+        builder.setTitle("Update drink in " + cfg.getName())
+                .setView(holder.editText)
+                .setPositiveButton("Save", (dialogInterface, i) -> updateConnectedDrink(cfg, holder))
+                .setNegativeButton("Cancel", (d,i) -> d.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void updateConnectedDrink(PumpConfiguration cfg, ConnectedDrinksViewHolder holder) {
+
+    }
+
     @Override
     public int getItemCount() {
         return pumpConfigurations.size();
@@ -65,12 +94,15 @@ public class ConnectedDrinksAdapter extends RecyclerView.Adapter<ConnectedDrinks
         TextView pumpNameTextView;
         TextView drinkNameTextView;
         Button cleanButton;
+        ImageButton nameEditButton;
+        EditText editText;
 
         public ConnectedDrinksViewHolder(@NonNull View itemView) {
             super(itemView);
             pumpNameTextView = itemView.findViewById(R.id.connected_drinks_pump_name);
             drinkNameTextView = itemView.findViewById(R.id.connected_drinks_drink_name);
             cleanButton = itemView.findViewById(R.id.connected_drinks_clean_button);
+            nameEditButton = itemView.findViewById(R.id.connected_drinks_name_edit_button);
         }
     }
 

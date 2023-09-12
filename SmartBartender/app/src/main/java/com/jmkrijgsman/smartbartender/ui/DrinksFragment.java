@@ -66,7 +66,7 @@ public class DrinksFragment extends DialogFragment implements ConnectionCallback
         }
 
         rv = requireView().findViewById(R.id.recipe_fragment_connected_drinks_recyclerview);
-        adapter = new ConnectedDrinksAdapter(PumpConfigurationCache.getInstance().getPumpConfigurations(), this);
+        adapter = new ConnectedDrinksAdapter(PumpConfigurationCache.getInstance().getPumpConfigurations(), this, this.getActivity());
 
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));

@@ -13,4 +13,5 @@
     <string name="delete_button_text">Delete</string>
     <string name="not_connected">not connected</string>
     <string name="drinks">Drinks</string>
+    <string name="clean">Clean</string>
 </resources>
