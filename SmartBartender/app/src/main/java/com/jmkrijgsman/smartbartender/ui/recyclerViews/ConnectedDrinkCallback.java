@@ -4,4 +4,5 @@ import com.jmkrijgsman.smartbartender.connection.PumpConfiguration;
 
 public interface ConnectedDrinkCallback {
     void onCleanButtonPressed(PumpConfiguration cfg, boolean runClean);
+    void updateConnectedDrink(PumpConfiguration cfg);
 }

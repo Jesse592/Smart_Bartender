@@ -7,6 +7,7 @@ import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
 import com.jmkrijgsman.smartbartender.connection.commands.IncomingCommandsCache;
 import com.jmkrijgsman.smartbartender.ui.ConnectionCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -116,5 +117,29 @@ public class TcpHandler implements ConnectionCallback {
     @Override
     public void OnRecipeChanged(boolean i, int p, Recipe r) {
         this.callbacks.forEach(c -> c.OnRecipeChanged(i, p, r));
+    }
+
+    public void updateConnectedDrinks(PumpConfiguration cfg) {
+        List<PumpConfiguration> configurations = PumpConfigurationCache.getInstance().getPumpConfigurations();
+
+        for (PumpConfiguration config : configurations) {
+            if (config.getKey() == cfg.getKey())
+                config.setName(cfg.getName());
+        }
+
+        PumpConfigurationCache.getInstance().setPumpConfigurations(configurations);
+
+        try {
+            JSONObject command = new JSONObject();
+            JSONObject data = new JSONObject();
+
+            data.put("config", new JSONArray(new Gson().toJson(configurations)));
+            command.put("command", "UpdateConnectedDrinks");
+            command.put("data", data);
+
+            client.sendMessage(command.toString());
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
     }
 }

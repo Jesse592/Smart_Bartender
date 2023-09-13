@@ -100,4 +100,9 @@ public class DrinksFragment extends DialogFragment implements ConnectionCallback
     public void onCleanButtonPressed(PumpConfiguration cfg, boolean runCleaning) {
         this.handler.cleanPump(cfg, runCleaning);
     }
+
+    @Override
+    public void updateConnectedDrink(PumpConfiguration cfg) {
+        this.handler.updateConnectedDrinks(cfg);
+    }
 }

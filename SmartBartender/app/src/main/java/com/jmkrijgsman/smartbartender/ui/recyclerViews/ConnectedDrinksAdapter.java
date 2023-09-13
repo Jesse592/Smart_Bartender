@@ -82,7 +82,11 @@ public class ConnectedDrinksAdapter extends RecyclerView.Adapter<ConnectedDrinks
     }
 
     private void updateConnectedDrink(PumpConfiguration cfg, ConnectedDrinksViewHolder holder) {
+        if (cfg.getDrink().contentEquals(holder.editText.getText()))
+            return;
 
+        cfg.setDrink(String.valueOf(holder.editText.getText()));
+        callback.updateConnectedDrink(cfg);
     }
 
     @Override

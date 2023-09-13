@@ -1,5 +1,6 @@
 package com.jmkrijgsman.smartbartender.ui;
 
+import com.jmkrijgsman.smartbartender.connection.PumpConfiguration;
 import com.jmkrijgsman.smartbartender.datastorage.room.Recipe;
 
 public interface ConnectionCallback {
