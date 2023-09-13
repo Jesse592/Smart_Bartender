@@ -143,6 +143,7 @@ class Bartender():
 			
 		print(f"Closed client connection: {addr}")
 		conn.close()
+		self.menu.setText(MAIN_MENU_TEXT)
 	
 	def runUltrasone(self):
 		self.ultrasone.distance = 0
