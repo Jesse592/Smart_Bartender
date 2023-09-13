@@ -11,10 +11,14 @@ HOST = "192.168.4.1"
 #HOST = "145.49.12.93"
 PORT = 65432
 
+MAIN_MENU_TEXT = "Smartbartender"
+
 GPIO.setmode(GPIO.BCM)
 
 FLOW_RATE = 60.0/500.0
+
 ULTRASONE_TRIGGER_DELAY = 1
+ULTRASONE_START_DISTANCE = 18
 
 class Bartender(): 
 	def __init__(self):     
@@ -51,6 +55,8 @@ class Bartender():
 		self.updateIsActive(conn, False)
 
 	def updateIsActive(self, conn: socket, running, progress = None):
+		if (running == False):
+			self.menu.setText(MAIN_MENU_TEXT)
 		self.running = running
 
 		conn.send((json.dumps({'command': 'RecipeChanged', 'data': {'isProcessing': running, 'progress': progress, 'recipe': self.recipe}}) + "\r\n").encode())
@@ -65,9 +71,16 @@ class Bartender():
 		for x in range(1, 101):
 			# Update LED screen
 			time.sleep(interval)
+			if (x % 10 == 0):
+				self.menu.drawProgress(x)
 			self.updateIsActive(conn, True, x)
 
 	def makeDrink(self, conn: socket, recipe):
+		if (self.ultrasone.distance > ULTRASONE_START_DISTANCE):
+			self.menu.setText("Place glass")
+			self.updateIsActive(conn, False)
+			return
+		
 		self.recipe = recipe     
 		self.updateIsActive(conn, True)
 
@@ -136,7 +149,6 @@ class Bartender():
 		try:
 			while self.isRunning:
 				self.ultrasone.trigger()
-				self.menu.setText(f"{self.ultrasone.distance}cm")
 				time.sleep(ULTRASONE_TRIGGER_DELAY)
 		except:
 			self.ultrasone.distance = 0
@@ -144,7 +156,7 @@ class Bartender():
 	def run(self):
 		self.isRunning = True
      
-		self.menu.setText("Smartbartender")
+		self.menu.setText(MAIN_MENU_TEXT)
 		threading.Thread(target=self.runUltrasone).start()
 
 		with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

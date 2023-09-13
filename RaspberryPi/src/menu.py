@@ -39,3 +39,16 @@ class Menu():
 
 		self.oled.image(image)
 		self.oled.show()
+  
+	def drawProgress(self, progress):
+		print(f"Draw {progress}")
+		self.oled.fill(0)
+		self.oled.show()
+  
+		image = Image.new("1", (self.oled.width, self.oled.height))
+		draw = ImageDraw.Draw(image)
+  
+		draw.rectangle((0, 0, self.oled.width * (progress / 100), self.oled.height), outline=255, fill=255)
+  
+		self.oled.image(image)
+		self.oled.show()
