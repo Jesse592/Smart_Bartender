@@ -7,8 +7,8 @@ import RPi.GPIO as GPIO
 from menu import Menu
 from ultrasone import Ultrasone
 
-HOST = "192.168.4.1"
-#HOST = "145.49.12.93"
+#HOST = "192.168.4.1"
+HOST = "145.49.33.90"
 PORT = 65432
 
 MAIN_MENU_TEXT = "Smartbartender"
