@@ -5,18 +5,21 @@ import traceback
 import socket
 import RPi.GPIO as GPIO
 from menu import Menu
+from ultrasone import Ultrasone
 
-HOST = "192.168.4.1"  # Make IP static or update field dynamicly
+HOST = "192.168.4.1"
 #HOST = "145.49.12.93"
 PORT = 65432
 
 GPIO.setmode(GPIO.BCM)
 
 FLOW_RATE = 60.0/500.0
+ULTRASONE_TRIGGER_DELAY = 1
 
 class Bartender(): 
 	def __init__(self):     
 		self.menu = Menu()
+		self.ultrasone = Ultrasone(4,3)
 		self.running = False
   
 		self.recipe = None
@@ -127,15 +130,27 @@ class Bartender():
 			
 		print(f"Closed client connection: {addr}")
 		conn.close()
+	
+	def runUltrasone(self):
+		self.ultrasone.distance = 0
+		try:
+			while self.isRunning:
+				self.ultrasone.trigger()
+				self.menu.setText(f"{self.ultrasone.distance}cm")
+				time.sleep(ULTRASONE_TRIGGER_DELAY)
+		except:
+			self.ultrasone.distance = 0
     
 	def run(self):
+		self.isRunning = True
+     
 		self.menu.setText("Smartbartender")
+		threading.Thread(target=self.runUltrasone).start()
 
 		with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			s.bind((HOST, PORT))
 			s.listen()
 
-			self.isRunning = True
 			while self.isRunning:
 				try:
 					conn, addr = s.accept()
