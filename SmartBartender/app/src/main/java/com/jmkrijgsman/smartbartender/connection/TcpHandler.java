@@ -133,7 +133,11 @@ public class TcpHandler implements ConnectionCallback {
             JSONObject command = new JSONObject();
             JSONObject data = new JSONObject();
 
-            data.put("config", new JSONArray(new Gson().toJson(configurations)));
+            for (PumpConfiguration pumpConfiguration : configurations)
+            {
+                data.put(pumpConfiguration.getName(), new JSONObject(new Gson().toJson(pumpConfiguration)));
+            }
+
             command.put("command", "UpdateConnectedDrinks");
             command.put("data", data);
 

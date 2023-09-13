@@ -140,6 +140,9 @@ class Bartender():
 					threading.Thread(target=self.clean, args=(conn, jsonData["data"]["pump"])).start()
 				else:
 					self.isCleaning = False
+			elif (command == "UpdateConnectedDrinks"):
+				self.writePumpConfiguration(jsonData["data"])
+				self.pump_configuration = jsonData["data"]
 			
 		print(f"Closed client connection: {addr}")
 		conn.close()

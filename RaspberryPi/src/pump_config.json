@@ -1,32 +1,32 @@
 {
-	"pump_1": {
-		"name": "Pump 1",
-		"key": 17, 
-		"drink": "gin"
+	"Pump 1": {
+		"drink": "gin",
+		"key": 17,
+		"name": "Pump 1"
 	},
-	"pump_2": {
-		"name": "Pump 2",
-		"key": 27, 
-		"drink": "tonic"
+	"Pump 2": {
+		"drink": "tonic",
+		"key": 27,
+		"name": "Pump 2"
 	},
-	"pump_3": {
-		"name": "Pump 3",
-		"key": 22, 
-		"drink": "cola"
+	"Pump 3": {
+		"drink": "cola",
+		"key": 22,
+		"name": "Pump 3"
 	},
-	"pump_4": {
-		"name": "Pump 4",
-		"key": 23, 
-		"drink": "bacardi"
+	"Pump 4": {
+		"drink": "bacardi",
+		"key": 23,
+		"name": "Pump 4"
 	},
-	"pump_5": {
-		"name": "Pump 5",
-		"key": 24, 
-		"drink": null
+	"Pump 5": {
+		"drink": "Vodka",
+		"key": 24,
+		"name": "Pump 5"
 	},
-	"pump_6": {
-		"name": "Pump 6",
-		"key": 25, 
-		"drink": null
+	"Pump 6": {
+		"drink": "null",
+		"key": 25,
+		"name": "Pump 6"
 	}
 }
