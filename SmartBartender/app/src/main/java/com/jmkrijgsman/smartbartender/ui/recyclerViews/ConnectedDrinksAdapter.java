@@ -40,9 +40,7 @@ public class ConnectedDrinksAdapter extends RecyclerView.Adapter<ConnectedDrinks
     public ConnectedDrinksViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View viewItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.connected_drink_list_item, parent, false);
 
-        ConnectedDrinksViewHolder holder = new ConnectedDrinksViewHolder(viewItem);
-        holder.editText = new EditText(this.activity);
-        return holder;
+        return new ConnectedDrinksViewHolder(viewItem);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -69,6 +67,7 @@ public class ConnectedDrinksAdapter extends RecyclerView.Adapter<ConnectedDrinks
     }
 
     private void editDrinkName(PumpConfiguration cfg, ConnectedDrinksViewHolder holder) {
+        holder.editText = new EditText(this.activity);
         holder.editText.setHint(cfg.getDrink());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
