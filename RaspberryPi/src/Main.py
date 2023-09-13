@@ -32,7 +32,7 @@ class Bartender():
 		self.pump_configuration = Bartender.readPumpConfiguration()
   
 		for pump in self.pump_configuration.keys():
-			GPIO.setup(self.pump_configuration[pump]["pin"], GPIO.OUT, initial=GPIO.LOW)
+			GPIO.setup(self.pump_configuration[pump]["key"], GPIO.OUT, initial=GPIO.LOW)
 
 		print("Done initializing")
 
@@ -88,12 +88,12 @@ class Bartender():
 		pumpThreads = []
 		for ing in recipe["drinkAmounts"]:
 			for pump in self.pump_configuration.keys():
-				if ing["drinkName"] == self.pump_configuration[pump]["value"]:
+				if ing["drinkName"] == self.pump_configuration[pump]["drink"]:
 					waitTime = ing["amountInMilliliters"] * FLOW_RATE
 					if (waitTime > maxTime):
 						maxTime = waitTime
 					print(f"Pouring '{ing['drinkName']}' for '{waitTime}' s")
-					pump_t = threading.Thread(target=self.pour, args=(self.pump_configuration[pump]["pin"], waitTime))
+					pump_t = threading.Thread(target=self.pour, args=(self.pump_configuration[pump]["key"], waitTime))
 					pumpThreads.append(pump_t)
 
 		for thread in pumpThreads:
