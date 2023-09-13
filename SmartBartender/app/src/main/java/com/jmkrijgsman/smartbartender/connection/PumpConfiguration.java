@@ -40,7 +40,7 @@ public class PumpConfiguration {
     public PumpConfiguration(JSONObject json)
     {
         this.name = json.optString("name");
-        this.drink = json.optString("value");
-        this.key = json.optInt("pin");
+        this.drink = json.optString("drink");
+        this.key = json.optInt("key");
     }
 }
