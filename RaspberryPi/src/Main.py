@@ -7,8 +7,8 @@ import RPi.GPIO as GPIO
 from menu import Menu
 from ultrasone import Ultrasone
 
-#HOST = "192.168.4.1"
-HOST = "145.49.33.90"
+HOST = "192.168.68.109"
+#HOST = "145.49.33.90"
 PORT = 65432
 
 MAIN_MENU_TEXT = "Smartbartender"
@@ -50,7 +50,7 @@ class Bartender():
   
 		while (self.isCleaning):
 			print(f"Cleaning...")
-			self.pour(pump["key"], 1)
+			self.pour(pump["key"], 0.2)
 		
 		self.updateIsActive(conn, False)
 
