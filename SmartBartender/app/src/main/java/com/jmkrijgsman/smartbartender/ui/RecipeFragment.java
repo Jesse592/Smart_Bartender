@@ -114,14 +114,6 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
         Button saveButton = requireView().findViewById(R.id.recipe_fragment_save_button);
         saveButton.setOnClickListener(v -> {
             recipe.setName(recipeNameText.getText().toString());
-
-            List<DrinkAmount> nonEmptyDrinkAmounts = new ArrayList<>();
-            drinkAmounts.forEach(d -> {
-                if (d.getAmountInMilliliters() != 0)
-                    nonEmptyDrinkAmounts.add(d);
-            });
-
-            recipe.setDrinkAmounts(nonEmptyDrinkAmounts);
             AppDatabaseManager.getInstance(getContext()).insertRecipe(recipe);
 
             dismiss();
@@ -159,6 +151,16 @@ public class RecipeFragment extends DialogFragment implements DrinkAmountCallbac
 
     @Override
     public void onDrinkAmountSliderChanged(DrinkAmount drinkAmount) {
+        recipe.setName(recipeNameText.getText().toString());
+
+        List<DrinkAmount> nonEmptyDrinkAmounts = new ArrayList<>();
+        drinkAmounts.forEach(d -> {
+            if (d.getAmountInMilliliters() != 0)
+                nonEmptyDrinkAmounts.add(d);
+        });
+
+        recipe.setDrinkAmounts(nonEmptyDrinkAmounts);
+
         for(int i = 0; i < adapter.getItemCount(); i++)
         {
             adapter.updateHolderPercentage(rv.findViewHolderForAdapterPosition(i), i);

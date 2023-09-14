@@ -27,8 +27,8 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity implements BartenderCallback, ConnectionCallback {
     private static final String LOGTAG = "MainActivity";
 
-    //private static final String hostname = "192.168.4.1";
-    private static final String hostname = "145.49.33.90";
+    private static final String hostname = "192.168.68.109";
+    //private static final String hostname = "145.49.33.90";
     private static final int port = 65432;
 
     private final List<Recipe> recipes = new ArrayList<>();
