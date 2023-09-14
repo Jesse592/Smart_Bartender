@@ -84,9 +84,11 @@ public class ConnectedDrinksAdapter extends RecyclerView.Adapter<ConnectedDrinks
         if (cfg.getDrink().contentEquals(holder.editText.getText()))
             return;
 
+        if ("".contentEquals(holder.editText.getText())) cfg.setDrink("");
+        else cfg.setDrink(String.valueOf(holder.editText.getText()));
+
         holder.drinkNameTextView.setText(holder.editText.getText());
 
-        cfg.setDrink(String.valueOf(holder.editText.getText()));
         callback.updateConnectedDrink(cfg);
     }
 
